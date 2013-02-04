@@ -1,7 +1,7 @@
-   /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Database
-	This class contains functions to interact with the database
+	Instance
+	This class defines the instance object which provides a container
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -10,28 +10,61 @@
 	Exports Functions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-module.exports.dummyPlayer = dummyPlayer;
+module.exports.make = make;
 
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Global Variables
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+/* Instance Types */
+var 	types = {
+						container: require("./instance/types/container.js"),
+						world: require("./instance/types/world.js"),
+					};
+		
+/* Object Definitions */
+var 	objects = {
+							players: require("./instance/objects/players.js"),
+							bots: require("./instance/objects/bots.js"),
+							projectiles: require("./instance/objects/projectiles.js"),
+							environment: require("./instance/objects/environment.js"),
+						};
 		
 		
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-function dummyPlayer() {
+function make(type, hasClock) {
 	/* 
-		Provides a dummy player object for testing
+		Creates a new instance
 		
+		Parameters:
+			type - defines which instance class type to make
 	*/
-	var player = {
-							username: "Saggy Nuts",
-							instance_id: "master",
-							ship: "mercenary",
-							position: { x: 100, y: 2000, z: 100, rY: 0 }
-						}
+	var instance = {};
 	
-	return player;
+	if (type == "container") { 
+		instance.addObjectToContainer = function(details) { addObjectToContainer(details, instances) };
+		return types.container.make(instance); 
+	}
+	
+	if (type == "world") { 
+		instance.addObjectToWorld = function(details) { addObjectToWorld(details, instance) };
+		return types.world.make(instance, objects, hasClock); 
+	}
+
 }
+
+function addObjectToContainer(details, instances) {
+	instances.instance.push(objects[details.type].make());
+}
+
+function addObjectToWorld(details, instance) {
+	instance[details.instance_id].push(objects[details.type].make());
+}
+
+
+
+
+
