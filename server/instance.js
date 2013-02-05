@@ -45,7 +45,7 @@ function make(type, hasClock) {
 	var instance = {};
 	
 	if (type == "container") { 
-		instance.addObjectToContainer = function(details) { addObjectToContainer(details, instances) };
+		instance.addObjectToContainer = function(details) { addObjectToContainer(details, instance) };
 		return types.container.make(instance); 
 	}
 	
@@ -56,12 +56,12 @@ function make(type, hasClock) {
 
 }
 
-function addObjectToContainer(details, instances) {
-	instances.instance.push(objects[details.type].make());
+function addObjectToContainer(details, container) {
+	objects[details.class].make(details, container.instances[0][details.class]); // defaults to world 0 for now
 }
 
-function addObjectToWorld(details, instance) {
-	instance[details.instance_id].push(objects[details.type].make());
+function addObjectToWorld(details, world) {
+	world[details.type].push(objects[details.type].make());
 }
 
 

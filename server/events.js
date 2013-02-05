@@ -11,6 +11,7 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 module.exports.login = login;
+module.exports.logout = logout;
 module.exports.pong = pong;
 
 
@@ -23,7 +24,7 @@ module.exports.pong = pong;
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-function login(socket, data, db, instances) {
+function login(socket, data, db, instances, client_sessions) {
 	/* 
 		Returns the standard container type instance object
 		
@@ -31,8 +32,7 @@ function login(socket, data, db, instances) {
 			none
 	*/
 	if (data.username.length > 0) {
-		// send initial instructions
-		var player = db.dummyPlayer();
+		var player = db.getPlayer(data.username); 
 		
 		// check if we're dealing with a container
 		if (instances[player.instance_id].instances) {
@@ -42,6 +42,21 @@ function login(socket, data, db, instances) {
 			instances[player.instance_id].addObjectToWorld(player);
 		}
 	}
+	client_sessions.push({
+											sessionId: socket.id,
+											username: player.username
+										});
+											console.log(client_sessions);
+}
+function logout(socket, db, instances, client_sessions) {
+	client_sessions.forEach(function(client, index){
+			if (client.sessionId == socket.id) {
+				socket.broadcast.emit('logout', { username: client.username }); // change to sessionID later
+				client_sessions.splice(index, 1);
+			}		
+		});
+	delete socket;
+
 }
 
 function pong(socket, data) {

@@ -28,5 +28,5 @@ function make(details, players) {
 		Parameters:
 			username - player username
 	*/
-	
+	players.push(details);
 }

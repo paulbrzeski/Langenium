@@ -22,7 +22,8 @@ var 	app = require('http').createServer(function (request, response) { if (url.p
 
 // Variables
 
-var instances = {};
+var 	instances = {},
+		client_sessions = [];
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Startup
@@ -33,6 +34,7 @@ app.listen(80);
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+io.set('log level', 2); // supresses the console output
 io.sockets.on('connection', function (socket) {
 
 	// Ping and Pong
@@ -40,14 +42,13 @@ io.sockets.on('connection', function (socket) {
 	socket.on("pong", function(data){ events.pong(socket, data); });
 
 	// Player
-	socket.on("login", function(data){ events.login(socket, data, db, instances); });
-	
+	socket.on("login", function(data){ events.login(socket, data, db, instances, client_sessions); });
+	socket.on("disconnect" , function ()  { events.logout(socket, db, instances, client_sessions); });
 });
 
 function makeUniverse() {
-	instances["master"] = instance.make("container");
+	instances["master"] = instance.make("container", false);
 	instances.master.instances.push(
 		instance.make("world", false)
 	);
-	console.log(instances);
 }

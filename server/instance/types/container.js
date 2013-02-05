@@ -22,17 +22,16 @@ module.exports.make = make;
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-function make() {
+function make(container) {
 	/* 
 		Returns the standard container type instance object
 		
 		Parameters:
 			none
 	*/
-	var	container = { 
-									clock: setInterval( function(){ update(container); }, 1000 / 66),
-									instances: []
-								};
+	container.clock = setInterval( function(){ update(container); }, 1000 / 66);
+	container.instances = [];
+
 	return container;
 }
 
