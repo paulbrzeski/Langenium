@@ -37,9 +37,11 @@ function login(socket, data, db, instances, client_sessions) {
 		// check if we're dealing with a container
 		if (instances[player.instance_id].instances) {
 			instances[player.instance_id].addObjectToContainer(player, instances[player.instance_id].instances[0].players);
+			initializeClient(socket, instances[player.instance_id].instances[0]);
 		}
 		else {
 			instances[player.instance_id].addObjectToWorld(player, instances[player.instance_id].players);
+			initializeClient(socket, instances[player.instance_id]);
 		}
 	}
 	client_sessions.push({
@@ -47,7 +49,6 @@ function login(socket, data, db, instances, client_sessions) {
 											instance_id: player.instance_id,
 											username: player.username
 										});
-	
 }
 
 function logout(socket, db, instances, client_sessions) {
@@ -66,6 +67,21 @@ function logout(socket, db, instances, client_sessions) {
 			}		
 		});
 	delete socket;
+}
+
+function initializeClient(socket, instance) {
+	for (var objects in instance) {
+		if (typeof(instance[objects]) == "object") {
+
+			socket.emit("load", createInstruction(objects, instance[objects]) );
+		}
+	}
+}
+
+function createInstruction(name, value) {
+	var instruction = {};
+	instruction[name] = value;
+	return instruction;
 }
 
 function pong(socket, data) {

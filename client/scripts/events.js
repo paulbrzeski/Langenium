@@ -29,5 +29,6 @@ function getUrl() {
 }
 function setEventHandlers() {
 	socket.emit("login", { username: "Saggy Nuts" });
+	socket.on("load", function(data) { console.log(data); });
 	return socket;
 }
