@@ -19,6 +19,19 @@ module.exports.getPlayer = getPlayer;
 	
 // Database emulator 
 
+var object_classes = {
+									ships: 	[
+													{ type: "mercenary" },
+													{ type: "pirate" }
+												],
+									platforms: 	[
+															{ type: "union" }
+														],
+									terrain: 	[
+														{ type: "island" }
+													]
+								};
+
 var players = [
 							{
 								username: "Saggy Nuts",
@@ -28,7 +41,21 @@ var players = [
 								position: { x: 100, y: 2000, z: 100, rY: 0 }
 							}
 						];
-		
+
+var instances = 	[
+								{
+									instance_id: "master",
+									type: "container",
+									objects: 	{
+														environment: 	[
+																					{
+																						type: { platform: "union" },
+																						position: { x: 2000, y: 3500, z: 100, rY: 0 }
+																					}
+																				]
+													}
+								}
+							];
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

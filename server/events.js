@@ -72,16 +72,11 @@ function logout(socket, db, instances, client_sessions) {
 function initializeClient(socket, instance) {
 	for (var objects in instance) {
 		if (typeof(instance[objects]) == "object") {
-
-			socket.emit("load", createInstruction(objects, instance[objects]) );
+			var instruction = {};
+			instruction[objects] = instance[objects];
+			socket.emit("load", instruction );
 		}
 	}
-}
-
-function createInstruction(name, value) {
-	var instruction = {};
-	instruction[name] = value;
-	return instruction;
 }
 
 function pong(socket, data) {
