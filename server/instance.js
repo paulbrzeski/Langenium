@@ -57,14 +57,12 @@ function make(type, hasClock) {
 }
 
 function addObjectToContainer(details, container) {
-	objects[details.class].make(details, container.instances[0][details.class]); // defaults to world 0 for now
+	container.instances[0][details.class].push( objects[details.class].make(details) ); // defaults to world 0 for now
 }
 
 function addObjectToWorld(details, world) {
 	world[details.type].push(objects[details.type].make());
 }
-
-
 
 
 
