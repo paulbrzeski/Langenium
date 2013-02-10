@@ -1,7 +1,7 @@
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Instance
-	This class defines the instance object which provides a container
+	Instance/Types/Container
+		This class defines instance type 'container', which contains other instance types
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -17,52 +17,27 @@ module.exports.make = make;
 	Global Variables
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-/* Instance Types */
-var 	types = {
-						container: require("./types/container.js"),
-						world: require("./types/world.js"),
-					};
-		
-/* Object Definitions */
-var 	objects = {
-							players: require("./objects/players.js"),
-							bots: require("./objects/bots.js"),
-							projectiles: require("./objects/projectiles.js"),
-							environment: require("./objects/environment.js"),
-						};
-		
-		
+
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-function make(type, hasClock) {
+
+function make(container) {
 	/* 
-		Creates a new instance
+		Returns the standard container type instance object
 		
 		Parameters:
-			type - defines which instance class type to make
+			none
 	*/
-	var instance = {};
-	
-	if (type == "container") { 
-		instance.addObjectToContainer = function(details) { addObjectToContainer(details, instance) };
-		return types.container.make(instance); 
-	}
-	
-	if (type == "world") { 
-		instance.addObjectToWorld = function(details) { addObjectToWorld(details, instance) };
-		return types.world.make(instance, objects, hasClock); 
-	}
+	container.clock = setInterval( function(){ update(container); }, 1000 / 66);
+	container.instances = [];
 
-}
-
-function addObjectToContainer(details, container) {
-	container.instances[0][details.class].push( objects[details.class].make(details) ); // defaults to world 0 for now
-}
-
-function addObjectToWorld(details, world) {
-	world[details.type].push(objects[details.type].make());
+	return container;
 }
 
 
-
+function update(container) {
+	container.instances.forEach(function(instance, instanceIndex) {
+		instance.update();
+	});
+}

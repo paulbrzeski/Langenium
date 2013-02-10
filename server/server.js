@@ -47,8 +47,19 @@ io.sockets.on('connection', function (socket) {
 });
 
 function makeUniverse() {
-	instances["master"] = instance.make("container", false);
+/*
+	Sets up the main map
+*/
+	// Create container and first object 
+	instances.master = instance.make("container", false);
 	instances.master.instances.push(
 		instance.make("world", false)
 	);
+	
+	// Check the database for any objects that belong to this instance and add them
+	db.get("instances","instance_id","master").objects.forEach(function(object, index) {
+		instances.master.addObjectToContainer(object, instances.master);
+	});
 }
+
+

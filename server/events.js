@@ -32,16 +32,16 @@ function login(socket, data, db, instances, client_sessions) {
 			none
 	*/
 	if (data.username.length > 0) {
-		var player = db.getPlayer(data.username); 
+		var player = db.get("players", "username", data.username); 
 	
 		// check if we're dealing with a container
 		if (instances[player.instance_id].instances) {
 			instances[player.instance_id].addObjectToContainer(player, instances[player.instance_id].instances[0].players);
-			initializeClient(socket, instances[player.instance_id].instances[0]);
+			initializeClient(socket, instances[player.instance_id].instances[0], db);
 		}
 		else {
 			instances[player.instance_id].addObjectToWorld(player, instances[player.instance_id].players);
-			initializeClient(socket, instances[player.instance_id]);
+			initializeClient(socket, instances[player.instance_id], db);
 		}
 	}
 	client_sessions.push({
@@ -69,14 +69,25 @@ function logout(socket, db, instances, client_sessions) {
 	delete socket;
 }
 
-function initializeClient(socket, instance) {
+function initializeClient(socket, instance, db) {
 	for (var objects in instance) {
 		if (typeof(instance[objects]) == "object") {
 			var instruction = {};
 			instruction[objects] = instance[objects];
+			prepareLoadInstructions(instruction[objects], db);
 			socket.emit("load", instruction );
 		}
 	}
+}
+
+function prepareLoadInstructions(objects, db) {
+	objects.forEach(function(object, index){
+		for (var obj in object.type) {
+			for (var property in db.get("objects", "type", obj).details) {
+				object[property] = db.get("objects", "type", obj).details[property];
+			}
+		}
+	});
 }
 
 function pong(socket, data) {
