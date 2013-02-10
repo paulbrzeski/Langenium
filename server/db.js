@@ -22,8 +22,8 @@ module.exports.get = get;
 var db = {
 	objects: [
 		// Ships (Bots, Players)
-		{ type: "ship", name: "mercenary", details: { url: "assets/mercenary.js?nocache" } },
-		{ type: "ship", name: "pirate", details: { url: "assets/pirate.js?nocache"  } },
+		{ type: "ship", name: "mercenary", details: { url: "assets/mercenary.js?nocache", scale: 10 } },
+		{ type: "ship", name: "pirate", details: { url: "assets/pirate.js?nocache" , scale: 10 } },
 		
 		//Characters (Bots, Players)
 		

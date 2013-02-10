@@ -1,0 +1,10 @@
+/*
+	Game styles
+*/
+#game {
+	position: relative;
+	z-index: 1;
+	text-align: center;
+	margin: 0 auto;
+	overflow: hidden;
+}

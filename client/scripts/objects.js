@@ -19,26 +19,19 @@ function loadObject(instruction) {
 		y = instruction.position.y,
 		z = instruction.position.z,
 		scale = instruction.scale, 
-		category,
-		type;
-	
-	// it looks dodgy but this only loops once.
-	for (var objectType in instruction.type) {
-		type = instruction.type[objectType]; 
-		category = objectType;
-	}
+		type = instruction["class"]; 
 	
 	if (cacheIndex >= 0) {
 		var cachedObject = cache[cacheIndex];
 		mesh = makeObjectMesh(type, cachedObject.geometry, cachedObject.materials, x, y, z , scale);
-		renderObject(mesh, category, type, instruction);
+		renderObject(mesh, type, instruction);
 	}
 	else {
 		loader.load(instruction.url, function(geometry, materials) {
 			mesh = makeObjectMesh(type, geometry, materials, x, y, z , scale);
 			var cachedObject = { url: instruction.url, geometry: geometry, materials: materials};
 			cache.push(cachedObject);	
-			renderObject(mesh, category, type, instruction);
+			renderObject(mesh, type, instruction);
 		});
 	}
 }
@@ -114,22 +107,18 @@ function makeObjectMesh(objectType, geometry, materials, x, y, z, scale) {
 	object.geometry.colorsNeedUpdate = true;
 	return object;
 }
-function renderObject(mesh, category, type, instruction) {
+function renderObject(mesh, type, instruction) {
 	mesh.uid = instruction.id;
 	var  x = instruction.position.x,
 			y = instruction.position.y,
 			z = instruction.position.z,
 			scale = instruction.scale;
 
-	if (type == "platform") { 
+	if (type == "environment") { 
 		world_map.push(mesh);
 		scene.add(world_map[world_map.length-1]);
 	}
-	if (type ==  "island") {
-		world_map.push(mesh);
-		scene.add(world_map[world_map.length-1]);
-	}
-	if (type == "player") {	
+	if (type == "players") {
 		player = mesh;
 		player.bullets = [];
 		player.moveInterval = new Date().getTime();
@@ -141,25 +130,10 @@ function renderObject(mesh, category, type, instruction) {
 		
 		player.velocity = 0;
 		
-		player.add(playerScope());
 		player.add(camera);
 		scene.add(player);
 		ships.push(player);
-		$("#stats .player.info .username").html(player.username);
-		$("#playerList").append("<li>" + player.username + "</li>");
-	}
-	if (type == "ship") {
-		var ship = mesh;
-		ship.bullets = [];
-		ship.username = instruction.username;
-		ship.rotation.y = instruction.position.rotationY;
-			ship.material.materials.forEach(function(material,index){
-			ship.material.materials[index].morphTargets = true;
-		});
-		ships.push(ship);
-		scene.add(ships[ships.length-1]);
-		$("#playerList").append("<li>" + ship.username + "</li>");
-		$("#players h2").html("Players online (" + ships.length + ")");
+
 	}
 	if (type == "bot") {
 		var bot = mesh;
@@ -170,7 +144,5 @@ function renderObject(mesh, category, type, instruction) {
 		bot.add(botScope());
 		bots.push(bot);
 		scene.add(bots[bots.length-1]);
-		$("#botList").append("<li>" + bot.id + "</li>");
-		$("#bots h2").html("Enemies detected (" + bots.length + ")");
 	}
 }

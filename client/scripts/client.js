@@ -6,8 +6,11 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+$(document).ready(function(){
+	initializeClient();
+	animate();
+});
 
-initializeClient();
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Globals
@@ -16,7 +19,15 @@ initializeClient();
 var username = "Saggy Nuts";
 
 /* Game engine */
-var 	renderer;
+var 	renderer,
+		camera,
+		controls;
+		
+var duration = 100,
+	keyframes = 5,
+	animOffset = 0,
+	interpolation = duration / keyframes,
+	lastKeyframe = 0, currentKeyframe = 0;
 
 /* Object definition */
 var 	M = 10000 * 10000,
@@ -33,10 +44,26 @@ var 	M = 10000 * 10000,
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+var isFiring = false;
+$(document).bind("mousedown", function(event) {
+    switch (event.which) {
+        case 1:
+            isFiring = true;
+            break;
+        case 2:
+            //zoom IGNORE
+            break;
+        case 3:
+            //rotate
+            break;
+    }
+});
+
 function initializeClient() {
 /*
 	Initializes the client... :P
 */
+	updateWindowSize();
 	renderer = new THREE.WebGLRenderer({
 		antialias : true
 	});
@@ -44,6 +71,12 @@ function initializeClient() {
 	camera = new THREE.PerspectiveCamera( 45, (winW) / (winH), 10, M );
 	camera.position.y = 5;
 	camera.position.z = 50;
+	
+	controls = new THREE.TrackballControls(camera);
+	controls.target.set(0, 0, 0);
+	controls.staticMoving = true;
+	controls.dynamicDampingFactor = 0.5;
+	
 	createScene();
 	
 	renderer.setSize( winW, winH);
@@ -55,6 +88,7 @@ function createScene() {
 	Create basic scene objects - sky, etc
 */
 	scene = new THREE.Scene();
+	scene.add(camera);
 	var skyGeo = new THREE.CubeGeometry(M, M, M);
 	var skyMat = new THREE.MeshLambertMaterial({
 		shading: THREE.SmoothShading, 
@@ -97,6 +131,61 @@ function createScene() {
 	scene.add( hemiLight );
 	
 }	
+
+function animate() {
+	var delta = clock.getDelta();
+	
+	handleParticles(delta);
+	handleBullets(delta);
+	var animTime = new Date().getTime() % duration;
+	var keyframe = Math.floor( animTime / interpolation ) + animOffset;
+	
+	TWEEN.update();
+	var shipsMoving = false;
+	if (player) {
+		if  (player.velocity != 0) {
+			player.velocity *= .996;
+		}
+
+		if ( keyframe != currentKeyframe ) {
+			player.morphTargetInfluences[ lastKeyframe ] = 0;
+			player.morphTargetInfluences[ currentKeyframe ] = 1;
+			player.morphTargetInfluences[ keyframe ] = 0;
+
+			lastKeyframe = currentKeyframe;
+			currentKeyframe = keyframe;
+		}
+
+		player.morphTargetInfluences[ keyframe ] = ( animTime % interpolation ) / interpolation;
+		player.morphTargetInfluences[ lastKeyframe ] = 1 - player.morphTargetInfluences[ keyframe ];
+		player.updateMatrix();
+
+		movePlayer(player.velocity / 66, player.position, playerInput(delta));
+		
+		if (player.position.y < 50) {
+			player.position.y += 3;
+		}
+	}
+	
+	ships.forEach(function(ship,index){
+		if (ship.position.y < 50) { ship.position.y += 3; }
+		if (ship.rotation.z != 0) { ship.rotation.z -= ship.rotation.z / 50; }	
+	});
+	
+	bots.forEach(function(bot,index){
+		if (player) {
+			bots[index].children[0].rotation.x = -bots[index].rotation.x;
+			bots[index].children[0].rotation.y = -bots[index].rotation.y + player.rotation.y + player.children[0].rotation.y;
+			bots[index].children[0].rotation.z = -bots[index].rotation.z;
+		}
+		if (bot.position.y < 50) { bot.position.y += 3; }
+		if (bot.rotation.z != 0) { bot.rotation.z -= bot.rotation.z / 50; }
+	});
+	
+	requestAnimationFrame( animate );
+	renderer.render( scene, camera );
+	controls.update();
+}
 
 function updateWindowSize(){
 /*
