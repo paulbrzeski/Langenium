@@ -63,7 +63,7 @@ function initializeClient() {
 /*
 	Initializes the client... :P
 */
-	updateWindowSize();
+	updateWinSizeVariables();
 	renderer = new THREE.WebGLRenderer({
 		antialias : true
 	});
@@ -81,6 +81,8 @@ function initializeClient() {
 	
 	renderer.setSize( winW, winH);
 	$("#game").append(renderer.domElement);
+	
+	window.addEventListener( 'resize', onWindowResize, false );
 }
 
 function createScene() {
@@ -187,7 +189,19 @@ function animate() {
 	controls.update();
 }
 
-function updateWindowSize(){
+function onWindowResize() {
+/*
+	Resizes the renderer
+*/
+	updateWinSizeVariables();
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+
+function updateWinSizeVariables(){
 /*
 	Update the global window variables
 */

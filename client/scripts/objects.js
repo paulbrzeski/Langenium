@@ -14,7 +14,7 @@ function loadObject(instruction) {
 	var loader = new THREE.JSONLoader();
 	var cacheIndex = -1;
 	cache.forEach(function(cachedObject, index){ if (instruction.url == cachedObject.url) { cacheIndex = index;} });
-
+	console.log(instruction);
 	var  x = instruction.position.x,
 		y = instruction.position.y,
 		z = instruction.position.z,
@@ -123,7 +123,7 @@ function renderObject(mesh, type, instruction) {
 		player.bullets = [];
 		player.moveInterval = new Date().getTime();
 		player.username = instruction.username;
-		player.rotation.y = instruction.position.rotationY;
+		player.rotation.y = instruction.position.rY;
 		player.material.materials.forEach(function(material,index){
 			player.material.materials[index].morphTargets = true;
 		});

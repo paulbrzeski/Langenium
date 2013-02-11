@@ -34,7 +34,6 @@ function setEventHandlers() {
 	socket.on("load", function(data) { 
 		for (var objArray in data) {
 			data[objArray].forEach(function(instruction, index) {
-				console.log(instruction);
 				loadObject(instruction);
 			});
 		}
@@ -51,6 +50,7 @@ function detectCollision(source, direction, world_map) {
 function moveShip(ship, isPlayer, instruction) {
 
 	var playerMesh = player;
+
 	
 	if (instruction.details.pY != 0){
 		ship.position.y = instruction.details.pY;

@@ -12,10 +12,12 @@ function playerInput(delta){
 			move = false;
 	
 	if (keyboard.pressed("W")){
+		if (player.velocity > -1000) { player.velocity -= 10; }
 		move = true;
 		keyboardInput.pZ = 1;
 	}
 	if (keyboard.pressed("S")){
+		if (player.velocity < 1000) { player.velocity += 10; }
 		move = true;
 		keyboardInput.pZ = -1;
 	}
@@ -47,12 +49,12 @@ function playerInput(delta){
 }
 
 function movePlayer(velocity, playerPosition, data) {
-
+	
 	var 		velocityYChange = 300 * data.d,
 				rotateAngle = 0.01744444444444444444444444444444 * 2;
 
 	if (data.rY > 0) { data.rY = rotateAngle; }						// left
-	if (data.rY < 0) { data.rY = -rotateAngle; }					// right
+	if (data.rY < 0) { data.rY = -rotateAngle; }						// right
 	data.rY = (data.rY + data.rY * Math.PI / 180);
 	
 	if (data.pY > 0) { data.pY = velocityYChange; } 			// up
@@ -67,10 +69,10 @@ function movePlayer(velocity, playerPosition, data) {
 	var playerPositionVector = new THREE.Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
 	
 	var collisions = detectCollision(playerPositionVector, moveVector, world_map);
-
+	
 	if (collisions.length > 0) {
 		collisions.forEach(function(collision, index){
-			
+			player.velocity *= .99;
 			if (collision.distance < 90) {
 		
 				if (collision.point.x > playerPosition.x) 
@@ -79,13 +81,13 @@ function movePlayer(velocity, playerPosition, data) {
 					{ data.rY += collision.distance / 10000; }
 				
 				if (data.pX != 0) {
-					data.pX *= -.001;
+					data.pX  = player.position.x + data.pX * -.001;
 				}
 				if (data.pY != 0) {
-					data.pY *= -.001;
+					data.pY = player.position.y + data.pY * -.001;
 				}
 				if (data.pZ != 0) {
-					data.pZ *= -.001;
+					data.pZ  = player.position.z + data.pZ * -.001;
 				}
 			}
 		}); 
