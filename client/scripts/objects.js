@@ -43,6 +43,7 @@ function makeObjectMesh(objectType, geometry, materials, x, y, z, scale) {
 	materials.forEach(function(material, index){
 
 		if (material.name == "Metal") {
+
 				materials[index].vertexColors = THREE.VertexColors;
 		}
 		if (material.name == "Light-Metal") {

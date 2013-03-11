@@ -30,7 +30,7 @@ var duration = 100,
 	lastKeyframe = 0, currentKeyframe = 0;
 
 /* Object definition */
-var 	M = 10000 * 10000,
+var 	M = 1000000,
 			winW = 1024, winH = 768,
 			objects = {
 							players: [],
@@ -113,17 +113,58 @@ function createScene() {
 	sky.position.y += 10000;
 	scene.add(sky);
 	
-	var geometry = new THREE.PlaneGeometry( M, M );	
+	var geometry = new THREE.PlaneGeometry( M, M, 25, 25 );	
 	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+	for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
+		geometry.vertices[ i ].y = Math.random() * 1000 - 2000;
+	}
+	
+	var water = THREE.ImageUtils.loadTexture( "assets/water.jpg" );
+	water.anisotropy = 1;
+	water.wrapS = water.wrapT = THREE.RepeatWrapping;
+	water.repeat.set( 16, 16 );
+	
+	
 	var material = new THREE.MeshLambertMaterial( {
-		color: 0x003366,
+		color: 0x0066BB,
 		shading: THREE.SmoothShading, 
 		side: THREE.DoubleSide, 
-		overdraw: true
+		map: water
 	} );
+			
 
 	var plane = new THREE.Mesh( geometry, material );
 	scene.add( plane );
+	
+	geometry = new THREE.Geometry();
+
+	var texture = THREE.ImageUtils.loadTexture( 'assets/cloud10.png');
+
+	var material = new THREE.ShaderMaterial( {
+		map: texture,
+		transparent: true
+
+	} );
+
+	var plane = new THREE.Mesh( new THREE.PlaneGeometry( 64, 64 ) );
+
+	for ( var i = 0; i < 8000; i++ ) {
+
+		plane.position.x = Math.random() * 1000 - 500;
+		plane.position.y = - Math.random() * Math.random() * 1200 - 1500;
+		plane.position.z = i;
+		plane.rotation.z = Math.random() * Math.PI;
+		plane.scale.x = plane.scale.y = Math.random() * Math.random() * 150 + 50;
+
+		THREE.GeometryUtils.merge( geometry, plane );
+
+	}
+
+	var mesh = new THREE.Mesh( geometry, material );
+	mesh.name = "clouds";
+	scene.add( mesh );
+	
+	
 	
 	hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
 	hemiLight.color.setRGB( 0.9, 0.95, 1 );
@@ -143,10 +184,19 @@ function animate() {
 	TWEEN.update();
 	var shipsMoving = false;
 	if (player) {
+	
+		scene.children[1].material.map.offset.y +=  delta / 250;
+		scene.children[1].material.map.offset.x +=  delta / 250;
+		for ( var i = 0, l = scene.children[1].geometry.vertices.length; i < l; i ++ ) {
+			var next = i + 1;
+			if (next >= scene.children[1].geometry.vertices.length) { next = 0; }
+			scene.children[1].geometry.vertices[i].y += (scene.children[1].geometry.vertices[next].y - scene.children[1].geometry.vertices[i].y) / 10;
+		}
+		scene.children[1].geometry.verticesNeedUpdate = true;
 		if  (player.velocity != 0) {
 			player.velocity *= .996;
 		}
-
+	
 		if ( keyframe != currentKeyframe ) {
 			player.morphTargetInfluences[ lastKeyframe ] = 0;
 			player.morphTargetInfluences[ currentKeyframe ] = 1;
@@ -183,6 +233,7 @@ function animate() {
 		if (bot.position.y < 50) { bot.position.y += 3; }
 		if (bot.rotation.z != 0) { bot.rotation.z -= bot.rotation.z / 50; }
 	});
+
 	
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
