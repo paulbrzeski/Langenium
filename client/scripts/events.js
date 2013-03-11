@@ -50,7 +50,6 @@ function detectCollision(source, direction, world_map) {
 function moveShip(ship, isPlayer, instruction) {
 
 	var playerMesh = player;
-
 	
 	if (instruction.details.pY != 0){
 		ship.position.y = instruction.details.pY;

@@ -123,7 +123,6 @@ function createScene() {
 	} );
 
 	var plane = new THREE.Mesh( geometry, material );
-
 	scene.add( plane );
 	
 	hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
@@ -131,7 +130,6 @@ function createScene() {
 	hemiLight.groundColor.setRGB( 0.6, 0.75, 1 );
 	hemiLight.position.set( 0, M, 0 );
 	scene.add( hemiLight );
-	
 }	
 
 function animate() {
@@ -163,7 +161,9 @@ function animate() {
 		player.updateMatrix();
 
 		movePlayer(player.velocity / 66, player.position, playerInput(delta));
-		
+		if  (player.velocity != 0) {
+			player.velocity *= .996;
+		}
 		if (player.position.y < 50) {
 			player.position.y += 3;
 		}
@@ -171,7 +171,7 @@ function animate() {
 	
 	ships.forEach(function(ship,index){
 		if (ship.position.y < 50) { ship.position.y += 3; }
-		if (ship.rotation.z != 0) { ship.rotation.z -= ship.rotation.z / 50; }	
+		if (ship.rotation.z != 0) { ship.rotation.z -= ship.rotation.z / 50; }
 	});
 	
 	bots.forEach(function(bot,index){

@@ -12,12 +12,12 @@ function playerInput(delta){
 			move = false;
 	
 	if (keyboard.pressed("W")){
-		if (player.velocity > -1000) { player.velocity -= 10; }
+		if (player.velocity > -300) { player.velocity -= 10; }
 		move = true;
 		keyboardInput.pZ = 1;
 	}
 	if (keyboard.pressed("S")){
-		if (player.velocity < 1000) { player.velocity += 10; }
+		if (player.velocity < 150) { player.velocity += 10; }
 		move = true;
 		keyboardInput.pZ = -1;
 	}
@@ -72,7 +72,6 @@ function movePlayer(velocity, playerPosition, data) {
 	
 	if (collisions.length > 0) {
 		collisions.forEach(function(collision, index){
-			player.velocity *= .99;
 			if (collision.distance < 90) {
 		
 				if (collision.point.x > playerPosition.x) 
@@ -84,7 +83,7 @@ function movePlayer(velocity, playerPosition, data) {
 					data.pX  = player.position.x + data.pX * -.001;
 				}
 				if (data.pY != 0) {
-					data.pY = player.position.y + data.pY * -.001;
+					data.pY = player.position.y;
 				}
 				if (data.pZ != 0) {
 					data.pZ  = player.position.z + data.pZ * -.001;
@@ -92,9 +91,8 @@ function movePlayer(velocity, playerPosition, data) {
 			}
 		}); 
 	}
-
-		moveShip(player, true, { name: "move", type: "player", details: data });
+	
+	moveShip(player, true, { name: "move", type: "player", details: data });
 		
-
-		$("#selectedItem").html("<div><strong>Player</strong><br />pX:&nbsp;"+player.position.x+"<br />pY:&nbsp;"+player.position.y+"<br />pZ:&nbsp;"+player.position.z+"<br />rY:&nbsp;"+player.rotation.y+"<br />d:&nbsp;" + Math.round(data.d * 1000) + "</div>");
+	$("#playerPosition").html("<div><strong>Player</strong><br />pX:&nbsp;"+Math.round(player.position.x)+"<br />pY:&nbsp;"+Math.round(player.position.y)+"<br />pZ:&nbsp;"+Math.round(player.position.z)+"<br />rY:&nbsp;"+Math.round(player.rotation.y)+"<br />d:&nbsp;" + Math.round(data.d * 1000) + "</div>");
 }

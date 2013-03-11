@@ -4,8 +4,10 @@
 		<title>Langenium Test Page</title>
 		<link href="styles/jquery-ui-1.9.2.custom.css" rel="stylesheet">
 		<link href="styles/game.css" rel="stylesheet">
+		<link href="styles/ui.css" rel="stylesheet">
 	</head>
 	<body>
+		<div id="ui"></div>
 		<div id="game">
 		</div>
 	</body>
@@ -28,7 +30,7 @@
 	<script src="scripts/objects/environment.js"></script>  
 	<script src="scripts/objects/players.js"></script>  
 	<script src="scripts/objects/projectiles.js"></script>  
-	
+	<script src="scripts/ui.js"></script>  
 	<script>
 
 		/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -38,7 +40,7 @@
 		// Global variables for the THREE JS client
 		var scene;
 		var keyboard = new THREEx.KeyboardState(), clock = new THREE.Clock();
-		var player, ships = [], bots = [], bullets = [], particle_systems = [];
+		var player, ships = [], bots = [], bullets = [], particle_systems = [], ui = [];
 		
 		//	Setup the global socket variable
 		var socket = setEventHandlers();

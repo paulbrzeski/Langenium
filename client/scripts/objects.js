@@ -14,7 +14,6 @@ function loadObject(instruction) {
 	var loader = new THREE.JSONLoader();
 	var cacheIndex = -1;
 	cache.forEach(function(cachedObject, index){ if (instruction.url == cachedObject.url) { cacheIndex = index;} });
-	console.log(instruction);
 	var  x = instruction.position.x,
 		y = instruction.position.y,
 		z = instruction.position.z,
@@ -37,8 +36,9 @@ function loadObject(instruction) {
 }
 function makeObjectMesh(objectType, geometry, materials, x, y, z, scale) {
 	var useVertexOverrides = false;
-	if ((objectType != "ship")&&(objectType != "player")&&(objectType != "bot")) {
+	if ((objectType != "ship")&&(objectType != "players")&&(objectType != "bot")) {
 		useVertexOverrides = true;
+
 	}
 	materials.forEach(function(material, index){
 
