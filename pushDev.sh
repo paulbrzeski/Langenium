@@ -5,6 +5,6 @@ else
     #scp -r client/* zeski@paulbrzeski.com:/home/content/08/10109808/html/langenium/dev
     git add .
     eval "git commit -m \"$1\""
-    git push
+    git push origin dev
 fi
 
