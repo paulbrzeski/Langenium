@@ -37,7 +37,7 @@ var db = {
 			instance_id: "master",
 			class: "players",
 			type: { ship: "mercenary" },
-			position: { x: 100, y: 1000, z: 100, rY: 0 }
+			position: { x: 1000, y: 8000, z: 100, rY: 0 }
 		}
 	],
 	instances: [

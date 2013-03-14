@@ -30,7 +30,7 @@ var duration = 100,
 	lastKeyframe = 0, currentKeyframe = 0;
 
 /* Object definition */
-var 	M = 1000000,
+var 	M = 250000,
 			winW = 1024, winH = 768,
 			objects = {
 							players: [],
@@ -91,7 +91,7 @@ function createScene() {
 */
 	scene = new THREE.Scene();
 	scene.add(camera);
-	var skyGeo = new THREE.CubeGeometry(M, M, M);
+	var skyGeo = new THREE.SphereGeometry(M / 2, 64, 64);
 	var skyMat = new THREE.MeshLambertMaterial({
 		shading: THREE.SmoothShading, 
 		side: THREE.DoubleSide, 
@@ -104,8 +104,8 @@ function createScene() {
 		face = skyGeo.faces[ i ];
 
 		face.vertexColors[0] =  new THREE.Color( 0x99ffff );
-		face.vertexColors[1] =  new THREE.Color( 0x3399FF );
-		face.vertexColors[2] =  new THREE.Color( 0x3399FF );
+		face.vertexColors[1] =  new THREE.Color( 0x99ffff );
+		face.vertexColors[2] =  new THREE.Color( 0x99ffff );
 		face.vertexColors[3] =  new THREE.Color( 0x99ffff );
 	}
 	
@@ -113,65 +113,52 @@ function createScene() {
 	sky.position.y += 10000;
 	scene.add(sky);
 	
-	var geometry = new THREE.PlaneGeometry( M, M, 25, 25 );	
+	var geometry = new THREE.PlaneGeometry( M, M, 100, 100 );	
 	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+			  var noise = new SimplexNoise();
+  var n;
+
+  var factorX = 50;
+  var factorY = 100;
+  var factorZ = 100;
+  for (var i = 0; i < geometry.vertices.length; i++) {
+    n = noise.noise(geometry.vertices[i].x / 5 / factorX, geometry.vertices[i].y / 5 / factorY);
+    n -= 0.5;
+    geometry.vertices[i].y = n * factorZ;
+  }
+	/* Water vertex stuff
 	for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 		geometry.vertices[ i ].y = Math.random() * 1000 - 2000;
 	}
+	*/
 	
 	var water = THREE.ImageUtils.loadTexture( "assets/water.jpg" );
-	water.anisotropy = 1;
+
 	water.wrapS = water.wrapT = THREE.RepeatWrapping;
 	water.repeat.set( 16, 16 );
 	
 	
 	var material = new THREE.MeshLambertMaterial( {
-		color: 0x0066BB,
+		color: 0x006699,
 		shading: THREE.SmoothShading, 
 		side: THREE.DoubleSide, 
 		map: water
 	} );
-			
 
 	var plane = new THREE.Mesh( geometry, material );
 	scene.add( plane );
 	
-	geometry = new THREE.Geometry();
-
-	var texture = THREE.ImageUtils.loadTexture( 'assets/cloud10.png');
-
-	var material = new THREE.ShaderMaterial( {
-		map: texture,
-		transparent: true
-
-	} );
-
-	var plane = new THREE.Mesh( new THREE.PlaneGeometry( 64, 64 ) );
-
-	for ( var i = 0; i < 8000; i++ ) {
-
-		plane.position.x = Math.random() * 1000 - 500;
-		plane.position.y = - Math.random() * Math.random() * 1200 - 1500;
-		plane.position.z = i;
-		plane.rotation.z = Math.random() * Math.PI;
-		plane.scale.x = plane.scale.y = Math.random() * Math.random() * 150 + 50;
-
-		THREE.GeometryUtils.merge( geometry, plane );
-
-	}
-
-	var mesh = new THREE.Mesh( geometry, material );
-	mesh.name = "clouds";
-	scene.add( mesh );
+	cloudEffect({x: -20000, y: 20000, z: -20000});
 	
-	
-	
+		
 	hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
 	hemiLight.color.setRGB( 0.9, 0.95, 1 );
 	hemiLight.groundColor.setRGB( 0.6, 0.75, 1 );
 	hemiLight.position.set( 0, M, 0 );
 	scene.add( hemiLight );
+	
 }	
+
 
 function animate() {
 	var delta = clock.getDelta();
@@ -185,14 +172,24 @@ function animate() {
 	var shipsMoving = false;
 	if (player) {
 	
-		scene.children[1].material.map.offset.y +=  delta / 250;
-		scene.children[1].material.map.offset.x +=  delta / 250;
-		for ( var i = 0, l = scene.children[1].geometry.vertices.length; i < l; i ++ ) {
-			var next = i + 1;
-			if (next >= scene.children[1].geometry.vertices.length) { next = 0; }
-			scene.children[1].geometry.vertices[i].y += (scene.children[1].geometry.vertices[next].y - scene.children[1].geometry.vertices[i].y) / 10;
-		}
+
+		scene.children[1].rotation.y += Math.cos(delta) / 25000;
+		  var noise = new SimplexNoise();
+		  var n;
+
+		  var factorX = 50;
+		  var factorY = 25;
+		  var factorZ = Math.PI;
+		  for (var i = 0; i < scene.children[1].geometry.vertices.length; i++) {
+			n = noise.noise(scene.children[1].geometry.vertices[i].x / 500 / factorX, scene.children[1].geometry.vertices[i].y / 500 / factorY);
+			
+			scene.children[1].geometry.vertices[i].y = n;
+			
+			scene.children[1].geometry.vertices[i].z += n * factorZ;
+		  }
 		scene.children[1].geometry.verticesNeedUpdate = true;
+		
+		
 		if  (player.velocity != 0) {
 			player.velocity *= .996;
 		}
