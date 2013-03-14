@@ -1,5 +1,5 @@
-forever stop app.js
-cd /home/langenium/langenium/
-git pull langenium master
+forever stop server.js
+git pull github dev
 cd server
-forever start app.js
+forever start server.js
+cd ..
