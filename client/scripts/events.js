@@ -22,7 +22,7 @@ socket = io.connect(getUrl());
 function getUrl() {
 	if (window.location.href.indexOf("langenium") > 0)
 	{
-		return "http://54.252.102.111";
+		return "http://54.252.102.111:8080";
 		
 	}
 	else {
