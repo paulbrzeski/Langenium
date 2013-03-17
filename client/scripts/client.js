@@ -185,10 +185,10 @@ function animate() {
           scene.children[1].material.map.offset.y += Math.cos(time) / 48000;
           scene.children[1].rotation.y += Math.cos(time) / 48000;
 		  for (var i = 0; i < scene.children[1].geometry.vertices.length; i++) {
-		    n = noise.noise4d(scene.children[1].geometry.vertices[i].x / 100 / factorX, scene.children[1].geometry.vertices[i].y / 100 / factorY, scene.children[1].geometry.vertices[i].z / 100 / factorZ);
+		    n = noise.noise4d(scene.children[1].geometry.vertices[i].x / 100 / factorX, scene.children[1].geometry.vertices[i].y / 100 / factorY, scene.children[1].geometry.vertices[i].z / 100 / factorZ , time / 66);
             //scene.children[1].geometry.vertices[i].x -= n * Math.sin(time) * Math.PI * 40;
         //    scene.children[1].geometry.vertices[i].z -= n * Math.cos(time) * Math.PI * 40;
-			scene.children[1].geometry.vertices[i].y += n * Math.PI;
+			scene.children[1].geometry.vertices[i].y += n;
 		  }
 	    	scene.children[1].geometry.verticesNeedUpdate = true;
 		
