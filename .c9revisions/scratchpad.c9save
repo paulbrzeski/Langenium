@@ -1,0 +1,1 @@
+{"ts":1363273599575,"silentsave":true,"restoring":false,"patch":[[{"diffs":[[1,"nmap -A 54.252.102.111/32 -p 8080\n\nscp client/scripts/client.js zeski@paulbrzeski.com:/home/content/08/10109808/html/langenium/dev/scripts/"]],"start1":0,"start2":0,"length1":0,"length2":139}]],"length":139}

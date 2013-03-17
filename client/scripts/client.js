@@ -118,14 +118,16 @@ function createScene() {
 			  var noise = new SimplexNoise();
   var n;
 
-  var factorX = 50;
-  var factorY = 100;
-  var factorZ = 100;
-  for (var i = 0; i < geometry.vertices.length; i++) {
-    n = noise.noise(geometry.vertices[i].x / 5 / factorX, geometry.vertices[i].y / 5 / factorY);
-    n -= 0.5;
-    geometry.vertices[i].y = n * factorZ;
-  }
+    	  var factorX = 50;
+          var factorY = 25;
+          var factorZ = 80;
+		  for (var i = 0; i < geometry.vertices.length; i++) {
+		    n = noise.noise3d(geometry.vertices[i].x / 100 / factorX, geometry.vertices[i].y / 100 / factorY, geometry.vertices[i].z / 100 / factorZ);
+        geometry.vertices[i].x += n * Math.sin(M);
+        geometry.vertices[i].z += n * Math.cos(M);
+    	geometry.vertices[i].y += n;
+			
+		  }
 	/* Water vertex stuff
 	for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 		geometry.vertices[ i ].y = Math.random() * 1000 - 2000;
@@ -135,7 +137,7 @@ function createScene() {
 	var water = THREE.ImageUtils.loadTexture( "assets/water.jpg" );
 
 	water.wrapS = water.wrapT = THREE.RepeatWrapping;
-	water.repeat.set( 16, 16 );
+	water.repeat.set( 8, 8 );
 	
 	
 	var material = new THREE.MeshLambertMaterial( {
@@ -162,7 +164,7 @@ function createScene() {
 
 function animate() {
 	var delta = clock.getDelta();
-	
+	var time = new Date().getTime() / 1000;
 	handleParticles(delta);
 	handleBullets(delta);
 	var animTime = new Date().getTime() % duration;
@@ -172,22 +174,23 @@ function animate() {
 	var shipsMoving = false;
 	if (player) {
 	
-
-		scene.children[1].rotation.y += Math.cos(delta) / 25000;
+		scene.children[1].rotation.y = Math.cos(delta) / 15000;
 		  var noise = new SimplexNoise();
 		  var n;
 
-		  var factorX = 50;
-		  var factorY = 25;
-		  var factorZ = Math.PI;
+		  var factorX = 150;
+          var factorY = 150;
+          var factorZ = 80;
+          scene.children[1].material.map.offset.x += Math.sin(time) / 48000;
+          scene.children[1].material.map.offset.y += Math.cos(time) / 48000;
+          scene.children[1].rotation.y += Math.cos(time) / 48000;
 		  for (var i = 0; i < scene.children[1].geometry.vertices.length; i++) {
-			n = noise.noise(scene.children[1].geometry.vertices[i].x / 500 / factorX, scene.children[1].geometry.vertices[i].y / 500 / factorY);
-			
-			scene.children[1].geometry.vertices[i].y = n;
-			
-			scene.children[1].geometry.vertices[i].z += n * factorZ;
+		    n = noise.noise4d(scene.children[1].geometry.vertices[i].x / 100 / factorX, scene.children[1].geometry.vertices[i].y / 100 / factorY, scene.children[1].geometry.vertices[i].z / 100 / factorZ);
+            scene.children[1].geometry.vertices[i].x -= n * Math.sin(time) * Math.PI * 40;
+            scene.children[1].geometry.vertices[i].z -= n * Math.cos(time) * Math.PI * 40;
+			scene.children[1].geometry.vertices[i].y += n * Math.PI * 2;
 		  }
-		scene.children[1].geometry.verticesNeedUpdate = true;
+	    	scene.children[1].geometry.verticesNeedUpdate = true;
 		
 		
 		if  (player.velocity != 0) {

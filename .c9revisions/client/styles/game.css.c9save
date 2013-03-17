@@ -1,0 +1,1 @@
+{"ts":1363420577944,"silentsave":true,"restoring":false,"patch":[[{"diffs":[[1,"/*\n\tGame styles\n*/\nbody {\n\tmargin: 0;\n\toverflow: hidden;\n}\n#game {\n\tposition: relative;\n\tz-index: 1;\n\ttext-align: center;\n\tmargin: 0 auto;\n\toverflow: hidden;\n}"]],"start1":0,"start2":0,"length1":0,"length2":159}]],"length":159}

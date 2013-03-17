@@ -1,0 +1,1 @@
+{"ts":1363420581010,"silentsave":true,"restoring":false,"patch":[[{"diffs":[[1,"/*\n\tUI styles\n*/\n.dialog {\n\tcolor: #FFF;\n\tbackground-color: #000;\n\topacity: .8;\n\tz-index: 10;\n\tposition: absolute;\n\theight:auto;\n\tpadding: 1em;\n\tmargin: .5em;\n\tfont: 10px Verdana;\n}"]],"start1":0,"start2":0,"length1":0,"length2":181}]],"length":181}
