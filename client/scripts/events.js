@@ -12,14 +12,14 @@
 	Globals
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-socket = io.connect(getUrl());
+socket = io.connect(events.getUrl());
 
-
+function events () {}
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-function getUrl() {
+events.prototype.getUrl = function () {
 	if (window.location.href.indexOf("langenium") > 0)
 	{
 		return "http://54.252.102.111:8080";
@@ -29,7 +29,7 @@ function getUrl() {
 		return "http://localhost:80";
 	}
 }
-function setEventHandlers() {
+events.prototype.setEventHandlers = function () {
 	socket.emit("login", { username: "Saggy Nuts" });
 	socket.on("load", function(data) { 
 		for (var objArray in data) {
@@ -41,13 +41,13 @@ function setEventHandlers() {
 	return socket;
 }
 
-function detectCollision(source, direction, world_map) {
+events.prototype.detectCollision = function (source, direction, world_map) {
 	var raycaster = new THREE.Raycaster(source, direction.normalize());
 	var intersects = raycaster.intersectObjects(world_map);
 	return intersects;
 }
 
-function moveShip(ship, isPlayer, instruction) {
+events.prototype.moveShip = function (ship, isPlayer, instruction) {
 
 	var playerMesh = player;
 	

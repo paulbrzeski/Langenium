@@ -122,10 +122,10 @@ function createScene() {
           var factorY = 25;
           var factorZ = 80;
 		  for (var i = 0; i < geometry.vertices.length; i++) {
-		    n = noise.noise3d(geometry.vertices[i].x / 100 / factorX, geometry.vertices[i].y / 100 / factorY, geometry.vertices[i].z / 100 / factorZ);
-        geometry.vertices[i].x += n * Math.sin(M);
-        geometry.vertices[i].z += n * Math.cos(M);
-    	geometry.vertices[i].y += n;
+		    n = noise.noise4d(geometry.vertices[i].x / 100 / factorX, geometry.vertices[i].y / 100 / factorY, geometry.vertices[i].z / 100 / factorZ, 20);
+            geometry.vertices[i].x += n * 8;
+            geometry.vertices[i].z += n * 16;
+        	geometry.vertices[i].y += n * Math.PI * 2;
 			
 		  }
 	/* Water vertex stuff
@@ -178,17 +178,15 @@ function animate() {
 		  var noise = new SimplexNoise();
 		  var n;
 
-		  var factorX = 150;
-          var factorY = 150;
-          var factorZ = 80;
-          scene.children[1].material.map.offset.x += Math.sin(time) / 48000;
-          scene.children[1].material.map.offset.y += Math.cos(time) / 48000;
+          scene.children[1].material.map.offset.x += Math.sin(time) / 8000;
+          scene.children[1].material.map.offset.y += Math.cos(time) / 8000;
           scene.children[1].rotation.y += Math.cos(time) / 48000;
 		  for (var i = 0; i < scene.children[1].geometry.vertices.length; i++) {
-		    n = noise.noise4d(scene.children[1].geometry.vertices[i].x / 100 / factorX, scene.children[1].geometry.vertices[i].y / 100 / factorY, scene.children[1].geometry.vertices[i].z / 100 / factorZ , time / 66);
-            //scene.children[1].geometry.vertices[i].x -= n * Math.sin(time) * Math.PI * 40;
-        //    scene.children[1].geometry.vertices[i].z -= n * Math.cos(time) * Math.PI * 40;
-			scene.children[1].geometry.vertices[i].y += n;
+		    n = noise.noise3d(scene.children[1].geometry.vertices[i].x, scene.children[1].geometry.vertices[i].y, scene.children[1].geometry.vertices[i].z);
+
+            scene.children[1].geometry.vertices[i].x += n * 40;
+            scene.children[1].geometry.vertices[i].z += n * 40;
+			scene.children[1].geometry.vertices[i].y = n * Math.PI * 4;
 		  }
 	    	scene.children[1].geometry.verticesNeedUpdate = true;
 		

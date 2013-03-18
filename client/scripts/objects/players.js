@@ -68,7 +68,7 @@ function movePlayer(velocity, playerPosition, data) {
 	var moveVector = new THREE.Vector3(data.pX, data.pY, data.pZ);
 	var playerPositionVector = new THREE.Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
 	
-	var collisions = detectCollision(playerPositionVector, moveVector, world_map);
+	var collisions = events.detectCollision(playerPositionVector, moveVector, world_map);
 	
 	if (collisions.length > 0) {
 		collisions.forEach(function(collision, index){
@@ -92,7 +92,7 @@ function movePlayer(velocity, playerPosition, data) {
 		}); 
 	}
 	
-	moveShip(player, true, { name: "move", type: "player", details: data });
+	events.moveShip(player, true, { name: "move", type: "player", details: data });
 		
 	$("#playerPosition").html("<div><strong>Player</strong><br />pX:&nbsp;"+Math.round(player.position.x)+"<br />pY:&nbsp;"+Math.round(player.position.y)+"<br />pZ:&nbsp;"+Math.round(player.position.z)+"<br />rY:&nbsp;"+Math.round(player.rotation.y)+"<br />d:&nbsp;" + Math.round(data.d * 1000) + "</div>");
 }
