@@ -12,9 +12,12 @@
 	Globals
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-socket = io.connect(events.getUrl());
-
-function events () {}
+var events = function() {
+    this.socket = this.setEventHandlers(
+            io.connect(this.getUrl())
+        );
+    return this.socket;
+}
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function definitions
@@ -29,8 +32,8 @@ events.prototype.getUrl = function () {
 		return "http://localhost:80";
 	}
 }
-events.prototype.setEventHandlers = function () {
-	socket.emit("login", { username: "Saggy Nuts" });
+events.prototype.setEventHandlers = function (socket) {
+    socket.emit("login", { username: "Saggy Nuts" });
 	socket.on("load", function(data) { 
 		for (var objArray in data) {
 			data[objArray].forEach(function(instruction, index) {
