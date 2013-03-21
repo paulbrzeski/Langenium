@@ -7,10 +7,31 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-var	cache = [],
-		world_map = [];
 
-function loadObject(instruction) {
+/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    Globals
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+var objects = function() {
+    this = {};
+    this.cache = [];
+    this.world_map = [];
+    return this;
+}
+
+    // based on https://github.com/documentcloud/underscore/blob/bf657be243a075b5e72acc8a83e6f12a564d8f55/underscore.js#L767
+objects.prototype.new = function(obj) {
+    each(slice.call(arguments, 1), function(source) {
+      if (source) {
+        for (var prop in source) {
+          obj[prop] = source[prop];
+        }
+      }
+    });
+    return obj;
+};
+
+objects.prototype.loadObject = function (instruction) {
 	var loader = new THREE.JSONLoader();
 	var cacheIndex = -1;
 	cache.forEach(function(cachedObject, index){ if (instruction.url == cachedObject.url) { cacheIndex = index;} });
@@ -33,8 +54,9 @@ function loadObject(instruction) {
 			renderObject(mesh, type, instruction);
 		});
 	}
-}
-function makeObjectMesh(objectType, geometry, materials, x, y, z, scale) {
+};
+
+objects.prototype.makeObjectMesh = function (objectType, geometry, materials, x, y, z, scale) {
 	var useVertexOverrides = false;
 	if ((objectType != "ship")&&(objectType != "players")&&(objectType != "bot")) {
 		useVertexOverrides = true;
@@ -107,8 +129,9 @@ function makeObjectMesh(objectType, geometry, materials, x, y, z, scale) {
 	object.updateMatrix();
 	object.geometry.colorsNeedUpdate = true;
 	return object;
-}
-function renderObject(mesh, type, instruction) {
+};
+
+objects.prototype.renderObject = function (mesh, type, instruction) {
 	mesh.uid = instruction.id;
 	var  x = instruction.position.x,
 			y = instruction.position.y,
@@ -146,4 +169,4 @@ function renderObject(mesh, type, instruction) {
 		bots.push(bot);
 		scene.add(bots[bots.length-1]);
 	}
-}
+};

@@ -68,7 +68,7 @@ function movePlayer(velocity, playerPosition, data) {
 	var moveVector = new THREE.Vector3(data.pX, data.pY, data.pZ);
 	var playerPositionVector = new THREE.Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
 	
-	var collisions = events.detectCollision(playerPositionVector, moveVector, world_map);
+	var collisions = socket.detectCollision(playerPositionVector, moveVector, world_map);
 	
 	if (collisions.length > 0) {
 		collisions.forEach(function(collision, index){

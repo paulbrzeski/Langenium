@@ -2,3 +2,4 @@
 {"contributors":[],"silentsave":false,"ts":1363623114295,"patch":[[{"diffs":[[0,"ocket = "],[1,"events."],[0,"setEvent"]],"start1":1967,"start2":1967,"length1":16,"length2":23}]],"length":2021,"saved":false}
 {"ts":1363623662963,"patch":[[{"diffs":[[0,"ariable\n"],[1,"        var events = events();\n"],[0,"\t\tvar so"]],"start1":1952,"start2":1952,"length1":16,"length2":47}]],"length":2052,"saved":false}
 {"ts":1363624070294,"patch":[[{"diffs":[[0,"ble\n"],[-1,"        var events = events();\n\t\tvar socket = events.setEventHandler"],[1,"\t\tvar socket = new event"],[0,"s();"]],"start1":1956,"start2":1956,"length1":76,"length2":32}]],"length":2008,"saved":false}
+{"contributors":[],"silentsave":false,"ts":1363690449921,"patch":[[{"diffs":[[0,"ents();\n"],[1,"        \n        var d = dialogs();\n        d.makeDialog(\"playerPosition\", d.playerPosition);"],[0,"\n\t</scri"]],"start1":1981,"start2":1981,"length1":16,"length2":109}]],"length":2101,"saved":false}
