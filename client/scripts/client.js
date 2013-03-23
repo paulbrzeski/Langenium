@@ -184,9 +184,9 @@ function animate() {
 		  for (var i = 0; i < scene.children[1].geometry.vertices.length; i++) {
 		    n = noise.noise3d(scene.children[1].geometry.vertices[i].x, scene.children[1].geometry.vertices[i].y, scene.children[1].geometry.vertices[i].z);
 
-            scene.children[1].geometry.vertices[i].x += n * 40;
-            scene.children[1].geometry.vertices[i].z += n * 40;
-			scene.children[1].geometry.vertices[i].y = n * Math.PI * 4;
+            scene.children[1].geometry.vertices[i].x -= n * 7;
+            scene.children[1].geometry.vertices[i].z += n * 7;
+			scene.children[1].geometry.vertices[i].y = n * 11;
 		  }
 	    	scene.children[1].geometry.verticesNeedUpdate = true;
 		
