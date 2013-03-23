@@ -12,11 +12,13 @@
 	Globals
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-var events = function() {
+// This object
+var events = function(o) {
+	objects = o;
     this.socket = this.setEventHandlers(
             io.connect(this.getUrl())
         );
-    return this.socket;
+    return this;
 }
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -37,7 +39,7 @@ events.prototype.setEventHandlers = function (socket) {
 	socket.on("load", function(data) { 
 		for (var objArray in data) {
 			data[objArray].forEach(function(instruction, index) {
-				loadObject(instruction);
+				o.loadObject(instruction);
 			});
 		}
 	});

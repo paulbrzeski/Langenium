@@ -43,10 +43,14 @@
 		var keyboard = new THREEx.KeyboardState(), clock = new THREE.Clock();
 		var player, ships = [], bots = [], bullets = [], particle_systems = [], ui = [];
 		
+		// Setup the global objects variable
+		var o = new objects();
+		var p = new players();
+		
 		//	Setup the global socket variable
-		var socket = new events();
+		var e = new events(o);
         
-        var d = dialogs();
+        var d = new dialogs();
         d.makeDialog("playerPosition", d.playerPosition);
 	</script>
 </html>

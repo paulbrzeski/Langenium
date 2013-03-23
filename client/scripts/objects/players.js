@@ -7,7 +7,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-function playerInput(delta){
+// This object
+var players = function() {
+    return this;
+}
+
+players.prototype.playerInput = function (delta){
 	var keyboardInput = { d: delta, pZ: 0, pY: 0, rY: 0, fire: isFiring },
 			move = false;
 	
@@ -43,12 +48,12 @@ function playerInput(delta){
 	}
 	
 	if (move == true) {
-		socket.emit('move', keyboardInput);
+		e.socket.emit('move', keyboardInput);
 	}
 	return keyboardInput;
 }
 
-function movePlayer(velocity, playerPosition, data) {
+players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	
 	var 		velocityYChange = 300 * data.d,
 				rotateAngle = 0.01744444444444444444444444444444 * 2;
@@ -68,7 +73,7 @@ function movePlayer(velocity, playerPosition, data) {
 	var moveVector = new THREE.Vector3(data.pX, data.pY, data.pZ);
 	var playerPositionVector = new THREE.Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
 	
-	var collisions = socket.detectCollision(playerPositionVector, moveVector, world_map);
+	var collisions = e.detectCollision(playerPositionVector, moveVector, o.world_map);
 	
 	if (collisions.length > 0) {
 		collisions.forEach(function(collision, index){
@@ -92,7 +97,7 @@ function movePlayer(velocity, playerPosition, data) {
 		}); 
 	}
 	
-	events.moveShip(player, true, { name: "move", type: "player", details: data });
+	e.moveShip(player, true, { name: "move", type: "player", details: data });
 		
 	$("#playerPosition").html("<div><strong>Player</strong><br />pX:&nbsp;"+Math.round(player.position.x)+"<br />pY:&nbsp;"+Math.round(player.position.y)+"<br />pZ:&nbsp;"+Math.round(player.position.z)+"<br />rY:&nbsp;"+Math.round(player.rotation.y)+"<br />d:&nbsp;" + Math.round(data.d * 1000) + "</div>");
 }

@@ -208,7 +208,7 @@ function animate() {
 		player.morphTargetInfluences[ lastKeyframe ] = 1 - player.morphTargetInfluences[ keyframe ];
 		player.updateMatrix();
 
-		movePlayer(player.velocity / 66, player.position, playerInput(delta));
+		p.movePlayer(player.velocity / 66, player.position, p.playerInput(delta));
 		if  (player.velocity != 0) {
 			player.velocity *= .996;
 		}

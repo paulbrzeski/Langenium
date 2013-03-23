@@ -13,7 +13,6 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 var objects = function() {
-    this = {};
     this.cache = [];
     this.world_map = [];
     return this;
@@ -34,24 +33,25 @@ objects.prototype.new = function(obj) {
 objects.prototype.loadObject = function (instruction) {
 	var loader = new THREE.JSONLoader();
 	var cacheIndex = -1;
-	cache.forEach(function(cachedObject, index){ if (instruction.url == cachedObject.url) { cacheIndex = index;} });
+	this.cache.forEach(function(cachedObject, index){ if (instruction.url == cachedObject.url) { cacheIndex = index;} });
 	var  x = instruction.position.x,
 		y = instruction.position.y,
 		z = instruction.position.z,
 		scale = instruction.scale, 
-		type = instruction["class"]; 
+		type = instruction["class"],
+		o = this;
 	
 	if (cacheIndex >= 0) {
 		var cachedObject = cache[cacheIndex];
-		mesh = makeObjectMesh(type, cachedObject.geometry, cachedObject.materials, x, y, z , scale);
-		renderObject(mesh, type, instruction);
+		mesh = o.makeObjectMesh(type, cachedObject.geometry, cachedObject.materials, x, y, z , scale);
+		o.renderObject(mesh, type, instruction);
 	}
 	else {
 		loader.load(instruction.url, function(geometry, materials) {
-			mesh = makeObjectMesh(type, geometry, materials, x, y, z , scale);
+			mesh = o.makeObjectMesh(type, geometry, materials, x, y, z , scale);
 			var cachedObject = { url: instruction.url, geometry: geometry, materials: materials};
-			cache.push(cachedObject);	
-			renderObject(mesh, type, instruction);
+			o.cache.push(cachedObject);	
+			o.renderObject(mesh, type, instruction);
 		});
 	}
 };
@@ -139,8 +139,8 @@ objects.prototype.renderObject = function (mesh, type, instruction) {
 			scale = instruction.scale;
 
 	if (type == "environment") { 
-		world_map.push(mesh);
-		scene.add(world_map[world_map.length-1]);
+		this.world_map.push(mesh);
+		scene.add(this.world_map[this.world_map.length-1]);
 	}
 	if (type == "players") {
 		player = mesh;
