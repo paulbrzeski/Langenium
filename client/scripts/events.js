@@ -56,16 +56,20 @@ events.prototype.moveShip = function (ship, isPlayer, instruction) {
 
 	var playerMesh = player;
 	
+	
+	
 	if (instruction.details.pY != 0){
 		ship.position.y = instruction.details.pY;
 	}
 	
 	if (instruction.details.pX != 0){
 		ship.position.x = instruction.details.pX;
+
 	}
 	
 	if (instruction.details.pZ != 0) {
 		ship.position.z = instruction.details.pZ;
+
 	}
 	
 	var rotate = instruction.details.rY - ship.rotation.y;

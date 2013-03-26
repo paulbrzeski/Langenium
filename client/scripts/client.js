@@ -69,6 +69,8 @@ function initializeClient() {
 	});
 	
 	camera = new THREE.PerspectiveCamera( 45, (winW) / (winH), 10, M );
+	//camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 500, 1000 );
+
 	camera.position.y = 5;
 	camera.position.z = 50;
 	
@@ -115,19 +117,7 @@ function createScene() {
 	
 	var geometry = new THREE.PlaneGeometry( M, M, 100, 100 );	
 	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-			  var noise = new SimplexNoise();
-  var n;
-
-    	  var factorX = 50;
-          var factorY = 25;
-          var factorZ = 80;
-		  for (var i = 0; i < geometry.vertices.length; i++) {
-		    n = noise.noise4d(geometry.vertices[i].x / 100 / factorX, geometry.vertices[i].y / 100 / factorY, geometry.vertices[i].z / 100 / factorZ, 20);
-            geometry.vertices[i].x += n * 8;
-            geometry.vertices[i].z += n * 16;
-        	geometry.vertices[i].y += n * Math.PI * 2;
-			
-		  }
+	
 	/* Water vertex stuff
 	for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 		geometry.vertices[ i ].y = Math.random() * 1000 - 2000;
@@ -137,7 +127,7 @@ function createScene() {
 	var water = THREE.ImageUtils.loadTexture( "assets/water.jpg" );
 
 	water.wrapS = water.wrapT = THREE.RepeatWrapping;
-	water.repeat.set( 8, 8 );
+	water.repeat.set( 12, 12 );
 	
 	
 	var material = new THREE.MeshLambertMaterial( {
@@ -158,10 +148,10 @@ function createScene() {
 	hemiLight.groundColor.setRGB( 0.6, 0.75, 1 );
 	hemiLight.position.set( 0, M, 0 );
 	scene.add( hemiLight );
-	
+
 }	
 
-
+var particle;
 function animate() {
 	var delta = clock.getDelta();
 	var time = new Date().getTime() / 1000;
@@ -178,15 +168,18 @@ function animate() {
 		  var noise = new SimplexNoise();
 		  var n;
 
-          scene.children[1].material.map.offset.x += Math.sin(time) / 8000;
-          scene.children[1].material.map.offset.y += Math.cos(time) / 8000;
+          scene.children[1].material.map.offset.x += Math.sin(time) / 9000;
+          scene.children[1].material.map.offset.y += Math.cos(time) / 9000;
           scene.children[1].rotation.y += Math.cos(time) / 48000;
 		  for (var i = 0; i < scene.children[1].geometry.vertices.length; i++) {
-		    n = noise.noise3d(scene.children[1].geometry.vertices[i].x, scene.children[1].geometry.vertices[i].y, scene.children[1].geometry.vertices[i].z);
-
-            scene.children[1].geometry.vertices[i].x -= n * 7;
-            scene.children[1].geometry.vertices[i].z += n * 7;
-			scene.children[1].geometry.vertices[i].y = n * 11;
+			
+			if  ((scene.children[1].geometry.vertices[i].y < 150)&&(scene.children[1].geometry.vertices[i].y > -150)) {
+				n = noise.noise3d(scene.children[1].geometry.vertices[i].x * M / 2, scene.children[1].geometry.vertices[i].y * M, scene.children[1].geometry.vertices[i].z * M / 2);
+				scene.children[1].geometry.vertices[i].y += n * 3.2121 ;
+			}
+			else {
+				scene.children[1].geometry.vertices[i].y *= .996;
+			}
 		  }
 	    	scene.children[1].geometry.verticesNeedUpdate = true;
 		
