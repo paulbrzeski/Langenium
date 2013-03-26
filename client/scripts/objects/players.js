@@ -17,12 +17,12 @@ players.prototype.playerInput = function (delta){
 			move = false;
 	
 	if (keyboard.pressed("W")){
-		if (player.velocity > -300) { player.velocity -= 10; }
+		if (player.velocity > -300) { player.velocity -= 5; }
 		move = true;
 		keyboardInput.pZ = 1;
 	}
 	if (keyboard.pressed("S")){
-		if (player.velocity < 150) { player.velocity += 10; }
+		if (player.velocity < 150) { player.velocity += 5; }
 		move = true;
 		keyboardInput.pZ = -1;
 	}
@@ -55,7 +55,7 @@ players.prototype.playerInput = function (delta){
 
 players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	
-	var 		velocityYChange = 300 * data.d,
+	var 		velocityYChange = 300,
 				rotateAngle = 0.01744444444444444444444444444444 * 2;
 
 	if (data.rY > 0) { data.rY = rotateAngle; }						// left

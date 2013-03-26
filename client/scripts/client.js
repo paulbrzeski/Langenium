@@ -127,7 +127,7 @@ function createScene() {
 	var water = THREE.ImageUtils.loadTexture( "assets/water.jpg" );
 
 	water.wrapS = water.wrapT = THREE.RepeatWrapping;
-	water.repeat.set( 12, 12 );
+	water.repeat.set( 16, 16 );
 	
 	
 	var material = new THREE.MeshLambertMaterial( {
@@ -151,7 +151,7 @@ function createScene() {
 
 }	
 
-var particle;
+
 function animate() {
 	var delta = clock.getDelta();
 	var time = new Date().getTime() / 1000;
@@ -168,18 +168,22 @@ function animate() {
 		  var noise = new SimplexNoise();
 		  var n;
 
-          scene.children[1].material.map.offset.x += Math.sin(time) / 9000;
-          scene.children[1].material.map.offset.y += Math.cos(time) / 9000;
-          scene.children[1].rotation.y += Math.cos(time) / 48000;
+          scene.children[1].material.map.offset.x += 1 / 1500;
+          scene.children[1].material.map.offset.y += 1  / 2121;
+          scene.children[1].rotation.y -= Math.cos(time) / 500;
+		  
 		  for (var i = 0; i < scene.children[1].geometry.vertices.length; i++) {
-			
-			if  ((scene.children[1].geometry.vertices[i].y < 150)&&(scene.children[1].geometry.vertices[i].y > -150)) {
-				n = noise.noise3d(scene.children[1].geometry.vertices[i].x * M / 2, scene.children[1].geometry.vertices[i].y * M, scene.children[1].geometry.vertices[i].z * M / 2);
-				scene.children[1].geometry.vertices[i].y += n * 3.2121 ;
-			}
-			else {
-				scene.children[1].geometry.vertices[i].y *= .996;
-			}
+		  n = noise.noise3d(scene.children[1].geometry.vertices[i].x  , scene.children[1].geometry.vertices[i].y , scene.children[1].geometry.vertices[i].z );
+
+		 scene.children[1].geometry.vertices[i].z += n;
+			for (var j = 0; j < 4; j++) {
+				if  ((scene.children[1].geometry.vertices[i].y < 250)&&(scene.children[1].geometry.vertices[i].y > -50)) {
+					 scene.children[1].geometry.vertices[i].y += n + Math.sin(time * j) / 100;
+				}
+				else {
+					scene.children[1].geometry.vertices[i].y *= .996;
+				}
+			  }
 		  }
 	    	scene.children[1].geometry.verticesNeedUpdate = true;
 		
@@ -201,12 +205,12 @@ function animate() {
 		player.morphTargetInfluences[ lastKeyframe ] = 1 - player.morphTargetInfluences[ keyframe ];
 		player.updateMatrix();
 
-		p.movePlayer(player.velocity / 66, player.position, p.playerInput(delta));
+		p.movePlayer(player.velocity, player.position, p.playerInput(delta));
 		if  (player.velocity != 0) {
 			player.velocity *= .996;
 		}
 		if (player.position.y < 50) {
-			player.position.y += 3;
+			player.position.y += 6;
 		}
 	}
 	
