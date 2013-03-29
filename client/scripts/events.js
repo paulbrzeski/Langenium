@@ -31,7 +31,7 @@ events.prototype.getUrl = function () {
 		
 	}
 	else {
-		return "http://localhost:80";
+		return "http://localhost:8080";
 	}
 }
 events.prototype.setEventHandlers = function (socket) {
