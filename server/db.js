@@ -32,7 +32,7 @@ function get(path, search_term, callback) {
 	collection.find(search_term).toArray(function(err, result) {
 		if (err) { console.log(err); }
 		else {
-			callback(result[0]);	
+			callback(result);	
 		}
 	});
 }

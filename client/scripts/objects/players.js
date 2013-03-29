@@ -77,11 +77,12 @@ players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	water.position.x = data.pX;
 	water.position.z = data.pZ;
 	
-	var rotateWater = player.rotation.y;
+	var rotateWater =  data.rY  * -1;
 	//console.log("rotateWater:" + rotateWater + ", player.rotation.y" + player.rotation.y);
 	
-	water.material.map.offset.x += Math.sin(rotateWater) * velocity /25000 ;
-	water.material.map.offset.z += Math.cos(rotateWater) * velocity/25000;
+	water.material.map.offset.x-= Math.sin(rotateWater) * velocity / 25000;
+	water.material.map.offset.y -= Math.cos(rotateWater) *velocity / 25000;
+	
 	
 	sky.position.x = data.pX;
 	sky.position.y = data.pY;

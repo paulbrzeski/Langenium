@@ -37,6 +37,7 @@ events.prototype.getUrl = function () {
 events.prototype.setEventHandlers = function (socket) {
     socket.emit("login", { username: "Saggy Nuts" });
 	socket.on("load", function(data) { 
+		console.log(data);
 		o.loadObject(data);
 	});
 	return socket;

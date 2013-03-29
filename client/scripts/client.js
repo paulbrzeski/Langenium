@@ -98,7 +98,9 @@ function createScene() {
 		shading: THREE.SmoothShading, 
 		side: THREE.DoubleSide, 
 		 vertexColors: THREE.VertexColors,
-		overdraw: true 
+		overdraw: true ,
+		opacity: 0.9,
+		transparent: true
 	});
 	
 	for ( var i = 0; i < skyGeo.faces.length; i++ ) 

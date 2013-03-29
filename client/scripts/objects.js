@@ -42,7 +42,7 @@ objects.prototype.loadObject = function (instruction) {
 		o = this;
 	
 	if (cacheIndex >= 0) {
-		var cachedObject = cache[cacheIndex];
+		var cachedObject = o.cache[cacheIndex];
 		mesh = o.makeObjectMesh(type, cachedObject.geometry, cachedObject.materials, x, y, z , scale);
 		o.renderObject(mesh, type, instruction);
 	}

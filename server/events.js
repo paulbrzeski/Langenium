@@ -32,9 +32,8 @@ function login(socket, data, db, instances, client_sessions) {
 			none
 	*/
 	if (data.username.length > 0) {
-	var loginUser = function(player) { 
-			
-			console.log(player);
+	var loginUser = function(result) { 
+			var player = result[0];
 			// check if we're dealing with a container
 			if (instances[player.instance_id].instances) {
 				instances[player.instance_id].addObjectToContainer(player, instances[player.instance_id].instances[0].players);
@@ -82,7 +81,6 @@ function initializeClient(socket, instance, db) {
 			instruction[objects] = instance[objects];
 			
 			var send_instructions = function (instruction) {
-				console.log(instruction);
 				socket.emit("load", instruction );
 			};
 			prepareLoadInstructions(instruction[objects], db, send_instructions);
@@ -94,8 +92,9 @@ function prepareLoadInstructions(objects, db, send_instructions) {
 	objects.forEach(function(object, index){
 		for (var obj in object.type) {
 			var val = function(result) {
-				for (var property in result.details) {
-                                object[property] = result.details[property];
+				var val = result[0];
+				for (var property in val.details) {
+                                object[property] = val.details[property];
                  }
 				 send_instructions(object);
 			};
