@@ -32,23 +32,29 @@ function login(socket, data, db, instances, client_sessions) {
 			none
 	*/
 	if (data.username.length > 0) {
-		var player = db.get("players", "username", data.username); 
+	var loginUser = function(player) { 
+			
+			console.log(player);
+			// check if we're dealing with a container
+			if (instances[player.instance_id].instances) {
+				instances[player.instance_id].addObjectToContainer(player, instances[player.instance_id].instances[0].players);
+				initializeClient(socket, instances[player.instance_id].instances[0], db);
+			}
+			else {
+				instances[player.instance_id].addObjectToWorld(player, instances[player.instance_id].players);
+				initializeClient(socket, instances[player.instance_id], db);
+			}
+		
+		client_sessions.push({	sessionId: socket.id,
+												instance_id: player.instance_id,
+												username: player.username });
 	
-		// check if we're dealing with a container
-		if (instances[player.instance_id].instances) {
-			instances[player.instance_id].addObjectToContainer(player, instances[player.instance_id].instances[0].players);
-			initializeClient(socket, instances[player.instance_id].instances[0], db);
-		}
-		else {
-			instances[player.instance_id].addObjectToWorld(player, instances[player.instance_id].players);
-			initializeClient(socket, instances[player.instance_id], db);
-		}
+	};
+	
+	db.get("players", { username: data.username }, loginUser);
+	
 	}
-	client_sessions.push({
-											sessionId: socket.id,
-											instance_id: player.instance_id,
-											username: player.username
-										});
+										
 }
 
 function logout(socket, db, instances, client_sessions) {
@@ -74,18 +80,26 @@ function initializeClient(socket, instance, db) {
 		if (typeof(instance[objects]) == "object") {
 			var instruction = {};
 			instruction[objects] = instance[objects];
-			prepareLoadInstructions(instruction[objects], db);
-			socket.emit("load", instruction );
+			
+			var send_instructions = function (instruction) {
+				console.log(instruction);
+				socket.emit("load", instruction );
+			};
+			prepareLoadInstructions(instruction[objects], db, send_instructions);
 		}
 	}
 }
 
-function prepareLoadInstructions(objects, db) {
+function prepareLoadInstructions(objects, db, send_instructions) {
 	objects.forEach(function(object, index){
 		for (var obj in object.type) {
-			for (var property in db.get("objects", "type", obj).details) {
-				object[property] = db.get("objects", "type", obj).details[property];
-			}
+			var val = function(result) {
+				for (var property in result.details) {
+                                object[property] = result.details[property];
+                 }
+				 send_instructions(object);
+			};
+			db.get("objects", {type: obj}, val);
 		}
 	});
 }

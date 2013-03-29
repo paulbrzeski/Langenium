@@ -19,9 +19,11 @@ var 	app = require('http').createServer(function (request, response) { if (url.p
 		url = require('url'),
 		events = require('./events.js'),
 		instance = require('./instance.js');
-
+	
 // Variables
 
+
+	
 var 	instances = {},
 		client_sessions = [];
 
@@ -44,6 +46,7 @@ io.sockets.on('connection', function (socket) {
 	// Player
 	socket.on("login", function(data){ events.login(socket, data, db, instances, client_sessions); });
 	socket.on("disconnect" , function ()  { events.logout(socket, db, instances, client_sessions); });
+	socket.on("move",function(data){ });
 });
 
 function makeUniverse() {
@@ -57,9 +60,12 @@ function makeUniverse() {
 	);
 	
 	// Check the database for any objects that belong to this instance and add them
-	db.get("instances","instance_id","master").objects.forEach(function(object, index) {
-		instances.master.addObjectToContainer(object, instances.master);
-	});
+	var objects = function(result) { result.objects.forEach(function(object){
+		 instances.master.addObjectToContainer(object, instances.master);
+	}); };
+	
+	db.get("instances", { instance_id: "master" }, objects);
+
 }
 
 

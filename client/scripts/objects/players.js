@@ -17,12 +17,12 @@ players.prototype.playerInput = function (delta){
 			move = false;
 	
 	if (keyboard.pressed("W")){
-		if (player.velocity > -300) { player.velocity -= 5; }
+		if (player.velocity > -150) { player.velocity -= 25; }
 		move = true;
 		keyboardInput.pZ = 1;
 	}
 	if (keyboard.pressed("S")){
-		if (player.velocity < 150) { player.velocity += 5; }
+		if (player.velocity < 75) { player.velocity += 25; }
 		move = true;
 		keyboardInput.pZ = -1;
 	}
@@ -55,8 +55,8 @@ players.prototype.playerInput = function (delta){
 
 players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	
-	var 		velocityYChange = 300,
-				rotateAngle = 0.01744444444444444444444444444444 * 2;
+	var 		velocityYChange = 60,
+				rotateAngle = 0.01744444444444444444444444444444 * 100 * data.d;
 
 	if (data.rY > 0) { data.rY = rotateAngle; }						// left
 	if (data.rY < 0) { data.rY = -rotateAngle; }						// right
@@ -67,8 +67,25 @@ players.prototype.movePlayer = function (velocity, playerPosition, data) {
 
 	data.rY += player.rotation.y;
 	data.pY += player.position.y;
-	data.pX = playerPosition.x + velocity * Math.sin(player.rotation.y);
-	data.pZ = playerPosition.z + velocity * Math.cos(player.rotation.y);
+	
+	var 	diffX = velocity * Math.sin(player.rotation.y),
+			diffZ = velocity * Math.cos(player.rotation.y);
+
+	data.pX = playerPosition.x + diffX;
+	data.pZ = playerPosition.z + diffZ;
+	
+	water.position.x = data.pX;
+	water.position.z = data.pZ;
+	
+	var rotateWater = player.rotation.y;
+	//console.log("rotateWater:" + rotateWater + ", player.rotation.y" + player.rotation.y);
+	
+	water.material.map.offset.x += Math.sin(rotateWater) * velocity /25000 ;
+	water.material.map.offset.z += Math.cos(rotateWater) * velocity/25000;
+	
+	sky.position.x = data.pX;
+	sky.position.y = data.pY;
+	sky.position.z = data.pZ;
 	
 	var moveVector = new THREE.Vector3(data.pX, data.pY, data.pZ);
 	var playerPositionVector = new THREE.Vector3(playerPosition.x, playerPosition.y, playerPosition.z);

@@ -68,11 +68,11 @@ function initializeClient() {
 		antialias : true
 	});
 	
-	camera = new THREE.PerspectiveCamera( 45, (winW) / (winH), 10, M );
+	camera = new THREE.PerspectiveCamera( 45, (winW) / (winH), 1, M );
 	//camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 500, 1000 );
-
-	camera.position.y = 5;
-	camera.position.z = 50;
+	camera.fov = 360;
+	camera.position.y = 4;
+	camera.position.z = 25;
 	
 	controls = new THREE.TrackballControls(camera);
 	controls.target.set(0, 0, 0);
@@ -111,46 +111,27 @@ function createScene() {
 		face.vertexColors[3] =  new THREE.Color( 0x99ffff );
 	}
 	
-	var sky = new THREE.Mesh(skyGeo, skyMat);
-	sky.position.y += 10000;
+	sky = new THREE.Mesh(skyGeo, skyMat);
+	sky.name = "sky";
 	scene.add(sky);
 	
-	var geometry = new THREE.PlaneGeometry( M, M, 100, 100 );	
-	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+	water = new effects.water.makeWater(M);
+	scene.add(water);
 	
-	/* Water vertex stuff
-	for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
-		geometry.vertices[ i ].y = Math.random() * 1000 - 2000;
-	}
-	*/
-	
-	var water = THREE.ImageUtils.loadTexture( "assets/water.jpg" );
-
-	water.wrapS = water.wrapT = THREE.RepeatWrapping;
-	water.repeat.set( 16, 16 );
-	
-	
-	var material = new THREE.MeshLambertMaterial( {
-		color: 0x006699,
-		shading: THREE.SmoothShading, 
-		side: THREE.DoubleSide, 
-		map: water
-	} );
-
-	var plane = new THREE.Mesh( geometry, material );
-	scene.add( plane );
-	
-	cloudEffect({x: -20000, y: 20000, z: -20000});
-	
+	cloudEffect({x: -240000, y: 50000, z: -240000});
 		
 	hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
+	hemiLight.name = "light1";
 	hemiLight.color.setRGB( 0.9, 0.95, 1 );
 	hemiLight.groundColor.setRGB( 0.6, 0.75, 1 );
 	hemiLight.position.set( 0, M, 0 );
 	scene.add( hemiLight );
-
+	if (window.location.href.indexOf("editor") > 0) {
+			
+			var hello = new ed.makeControls();
+			ui.makeDialog("editor_tools", hello);
+		}
 }	
-
 
 function animate() {
 	var delta = clock.getDelta();
@@ -162,31 +143,19 @@ function animate() {
 	
 	TWEEN.update();
 	var shipsMoving = false;
+	
 	if (player) {
 	
 		scene.children[1].rotation.y = Math.cos(delta) / 15000;
-		  var noise = new SimplexNoise();
-		  var n;
+		  var myTime = clock.getElapsedTime() * 10;
 
-          scene.children[1].material.map.offset.x += 1 / 1500;
-          scene.children[1].material.map.offset.y += 1  / 2121;
           scene.children[1].rotation.y -= Math.cos(time) / 500;
 		  
-		  for (var i = 0; i < scene.children[1].geometry.vertices.length; i++) {
-		  n = noise.noise3d(scene.children[1].geometry.vertices[i].x  , scene.children[1].geometry.vertices[i].y , scene.children[1].geometry.vertices[i].z );
-
-		 scene.children[1].geometry.vertices[i].z += n;
-			for (var j = 0; j < 4; j++) {
-				if  ((scene.children[1].geometry.vertices[i].y < 250)&&(scene.children[1].geometry.vertices[i].y > -50)) {
-					 scene.children[1].geometry.vertices[i].y += n + Math.sin(time * j) / 100;
-				}
-				else {
-					scene.children[1].geometry.vertices[i].y *= .996;
-				}
-			  }
-		  }
-	    	scene.children[1].geometry.verticesNeedUpdate = true;
-		
+		for (var i = 0; i < water.geometry.vertices.length; i++) {
+			var n = Math.sin( i / 5 + ( myTime + i ) /  7);
+			 water.geometry.vertices[i].y = 111.654321 * n;
+		}
+	    	water.geometry.verticesNeedUpdate = true;
 		
 		if  (player.velocity != 0) {
 			player.velocity *= .996;

@@ -23,8 +23,10 @@
 	<script src="libs/smoothie.js"></script> 
 	<script src="libs/SimplexNoise.js"></script> 
 	<script src="scripts/client.js"></script>  
+	<script src="scripts/editor.js"></script>  
 	<script src="scripts/effects/bullets.js"></script>  
 	<script src="scripts/effects/particles.js"></script>  
+	<script src="scripts/effects/water.js"></script>  
 	<script src="scripts/events.js"></script>  
 	<script src="scripts/objects.js"></script>  
 	<script src="scripts/objects/bots.js"></script>  
@@ -40,9 +42,12 @@
 		\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 		
 		// Global variables for the THREE JS client
-		var scene;
+		var scene, ocean, sky;
 		var keyboard = new THREEx.KeyboardState(), clock = new THREE.Clock();
 		var player, ships = [], bots = [], bullets = [], particle_systems = [], ui = [];
+		
+		var effects = {};
+		effects.water = new water();
 		
 		// Setup the global objects variable
 		var o = new objects();
@@ -51,7 +56,13 @@
 		//	Setup the global socket variable
 		var e = new events(o);
         
-        var d = new dialogs();
-        d.makeDialog("playerPosition", d.playerPosition);
+        var ui = new user_interface();
+        ui.makeDialog("playerPosition", ui.playerPosition);
+		
+		var ed = new editor();
+		
+		
+		
+		
 	</script>
 </html>

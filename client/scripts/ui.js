@@ -12,12 +12,14 @@
     Globals
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-var dialogs = function() {
-    this.playerPosition = { width: 80, alignX: "top", alignY: "center", data: "Hello" };
+var user_interface = function() {
+    this.playerPosition = { width: 80, alignX: "right", alignY: "top", data: "Hello" };
     return this;
 };
 
-dialogs.prototype.makeDialog = function (id, dialog) {
-	$("#ui").append("div").html(dialog.data).addClass("dialog").attr("id", id).css("width", dialog.width);
+user_interface.prototype.makeDialog = function (id, dialog) {
+	
+	$("<div></div>").html(dialog.data).addClass(".ui-helper-reset").addClass("dialog").attr("id", id).css("width", dialog.width).css(dialog.alignX, "0").css(dialog.alignY, "0").appendTo("#ui");
+	
 };
 

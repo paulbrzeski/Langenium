@@ -27,7 +27,7 @@ var events = function(o) {
 events.prototype.getUrl = function () {
 	if (window.location.href.indexOf("langenium") > 0)
 	{
-		return "http://54.252.102.111:8080";
+		return "http://server.langenium.com:8080";
 		
 	}
 	else {
@@ -37,11 +37,7 @@ events.prototype.getUrl = function () {
 events.prototype.setEventHandlers = function (socket) {
     socket.emit("login", { username: "Saggy Nuts" });
 	socket.on("load", function(data) { 
-		for (var objArray in data) {
-			data[objArray].forEach(function(instruction, index) {
-				o.loadObject(instruction);
-			});
-		}
+		o.loadObject(data);
 	});
 	return socket;
 }

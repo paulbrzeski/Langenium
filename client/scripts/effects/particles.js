@@ -55,7 +55,8 @@ function teleportEffect(position){
 }
 
 function cloudEffect(position){
-		var particleCount = 2222,
+		var 	particle,
+				particleCount = 2000,
 				particles = new THREE.Geometry(),
 				pMaterial =
 				  new THREE.ParticleBasicMaterial({
@@ -71,9 +72,22 @@ function cloudEffect(position){
 			for(var p = 0; p < particleCount; p++) {
 				// create a particle with random
 				// position values, -250 -> 250
-				var pX = position.x + Math.tan(Math.random() * p) * 11212,
-				  pY = position.y + 10000 + Math.random() * 4000 - 2000 ,
-				  pZ = position.z + Math.tan(Math.random()  * p) * 12323,
+				  var noise = new SimplexNoise();
+				
+				var pX = position.x, pY = position.y, pZ = position.z;
+				var n = noise.noise3d(pX, pY, pZ);
+				
+				for (var j = 0; j < 100; j++) {
+					pX +=   Math.random() * 5000;
+					pY += Math.random() * n * -33;
+					pZ +=   Math.random() * 5000;
+					for (var k = 0; k < 100; k++) {
+						pX += Math.random() *n;
+						pY -= Math.random();
+						pZ += Math.random() *n;
+					}
+				
+				}
 				  particle = new THREE.Vector3(pX, pY, pZ);
 				// add it to the geometry
 				particles.vertices.push(particle);
@@ -81,6 +95,7 @@ function cloudEffect(position){
 
 			// create the particle system
 			var particle_system = new THREE.ParticleSystem(particles, pMaterial);	
+			particle_system.name = "clouds";
 			particle_system.max = 16;
 			particle_system.min = 8;
 			particle_system._lifetime = -2;
