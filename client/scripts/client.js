@@ -94,26 +94,33 @@ function createScene() {
 	scene = new THREE.Scene();
 	scene.add(camera);
 	
-	var skyGeo = new THREE.SphereGeometry(M / 2, 64, 64);
+	var skyGeo = new THREE.CylinderGeometry(M / 2, M / 2, M, 64, 64, false);
 
 	var sky_materials = [ new THREE.MeshBasicMaterial({ 
 			color: 0x66CCFF,
 			shading: THREE.SmoothShading, 
-			side: THREE.DoubleSide, 
-			transparent: true,
-			opacity: 0.75
+			side: THREE.DoubleSide
 		}),
 		 new THREE.MeshBasicMaterial( { color: 0x003366, side: THREE.DoubleSide,  } )
 		 ];
 		 
 	for ( var i = 0; i < skyGeo.faces.length; i++ ) 
 	{
-		var half = skyGeo.faces.length / 2;
-		if (i < half) {
+		var diff = 1;
+		if (i > 0) {
+			diff = i - Math.round((i-1)/64) * 64 - 63 + 64;
+		}
+		console.log(diff);
+		if (diff > 0) {
 			skyGeo.faces[ i ].materialIndex = 0; 
 		}
 		else {
-			skyGeo.faces[ i ].materialIndex = 1;
+			if (i > (4223-128)) {
+				skyGeo.faces[ i ].materialIndex = 0;
+			}
+			else {
+				skyGeo.faces[ i ].materialIndex = 1;
+			}
 		}
 
 
@@ -121,6 +128,7 @@ function createScene() {
 	
 	sky = new THREE.Mesh(skyGeo, new THREE.MeshFaceMaterial(sky_materials));
 	sky.name = "sky";
+	sky.position.y = +16000;
 	scene.add(sky);
 	
 	water = new effects.water.makeWater(M);

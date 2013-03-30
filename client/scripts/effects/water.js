@@ -44,7 +44,7 @@ water.prototype.makeWater = function(M) {
 
 	var plane = new THREE.Mesh( geometry, material );
 	plane.name = "ocean";
-	plane.position.y -= 250;
+
 	return plane;
 };
 
