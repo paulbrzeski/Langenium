@@ -30,7 +30,7 @@ var duration = 100,
 	lastKeyframe = 0, currentKeyframe = 0;
 
 /* Object definition */
-var 	M = 250000,
+var 	M = 1000000,
 			winW = 1024, winH = 768,
 			objects = {
 							players: [],
@@ -93,27 +93,33 @@ function createScene() {
 */
 	scene = new THREE.Scene();
 	scene.add(camera);
-	var skyGeo = new THREE.SphereGeometry(M / 2, 64, 64);
-	var skyMat = new THREE.MeshLambertMaterial({
-		shading: THREE.SmoothShading, 
-		side: THREE.DoubleSide, 
-		 vertexColors: THREE.VertexColors,
-		overdraw: true ,
-		opacity: 0.9,
-		transparent: true
-	});
 	
+	var skyGeo = new THREE.SphereGeometry(M / 2, 64, 64);
+
+	var sky_materials = [ new THREE.MeshBasicMaterial({ 
+			color: 0x66CCFF,
+			shading: THREE.SmoothShading, 
+			side: THREE.DoubleSide, 
+			transparent: true,
+			opacity: 0.75
+		}),
+		 new THREE.MeshBasicMaterial( { color: 0x003366, side: THREE.DoubleSide,  } )
+		 ];
+		 
 	for ( var i = 0; i < skyGeo.faces.length; i++ ) 
 	{
-		face = skyGeo.faces[ i ];
+		var half = skyGeo.faces.length / 2;
+		if (i < half) {
+			skyGeo.faces[ i ].materialIndex = 0; 
+		}
+		else {
+			skyGeo.faces[ i ].materialIndex = 1;
+		}
 
-		face.vertexColors[0] =  new THREE.Color( 0x99ffff );
-		face.vertexColors[1] =  new THREE.Color( 0x99ffff );
-		face.vertexColors[2] =  new THREE.Color( 0x99ffff );
-		face.vertexColors[3] =  new THREE.Color( 0x99ffff );
+
 	}
 	
-	sky = new THREE.Mesh(skyGeo, skyMat);
+	sky = new THREE.Mesh(skyGeo, new THREE.MeshFaceMaterial(sky_materials));
 	sky.name = "sky";
 	scene.add(sky);
 	
@@ -146,22 +152,23 @@ function animate() {
 	TWEEN.update();
 	var shipsMoving = false;
 	
+	if (water) {
+		var myTime = clock.getElapsedTime() * 10;
+		for (var i = 0; i < water.geometry.vertices.length; i++) {
+			var n = Math.sin( i / 5 + ( myTime + i ) /  7);
+			water.geometry.vertices[i].y = 333.654321 * n;
+		}
+	    water.geometry.verticesNeedUpdate = true;
+	}
 	if (player) {
 	
 		scene.children[1].rotation.y = Math.cos(delta) / 15000;
-		  var myTime = clock.getElapsedTime() * 10;
-
-          scene.children[1].rotation.y -= Math.cos(time) / 500;
 		  
-		for (var i = 0; i < water.geometry.vertices.length; i++) {
-			var n = Math.sin( i / 5 + ( myTime + i ) /  7);
-			 water.geometry.vertices[i].y = 111.654321 * n;
-		}
-	    	water.geometry.verticesNeedUpdate = true;
 		
 		if  (player.velocity != 0) {
 			player.velocity *= .996;
 		}
+		
 	
 		if ( keyframe != currentKeyframe ) {
 			player.morphTargetInfluences[ lastKeyframe ] = 0;

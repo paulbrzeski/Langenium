@@ -80,12 +80,11 @@ players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	var rotateWater =  data.rY  * -1;
 	//console.log("rotateWater:" + rotateWater + ", player.rotation.y" + player.rotation.y);
 	
-	water.material.map.offset.x-= Math.sin(rotateWater) * velocity / 25000;
-	water.material.map.offset.y -= Math.cos(rotateWater) *velocity / 25000;
+	water.material.map.offset.x-= Math.sin(rotateWater) * velocity / 100000;
+	water.material.map.offset.y -= Math.cos(rotateWater) *velocity / 100000;
 	
 	
 	sky.position.x = data.pX;
-	sky.position.y = data.pY;
 	sky.position.z = data.pZ;
 	
 	var moveVector = new THREE.Vector3(data.pX, data.pY, data.pZ);

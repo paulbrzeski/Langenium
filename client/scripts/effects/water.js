@@ -36,13 +36,17 @@ water.prototype.makeWater = function(M) {
 		color: 0x006699,
 		shading: THREE.SmoothShading, 
 		side: THREE.DoubleSide, 
-		map: waterTexture
+		map: waterTexture,
+		transparent: true,
+		opacity: 0.75,
+		fog: true
 	} );
 
 	var plane = new THREE.Mesh( geometry, material );
 	plane.name = "ocean";
-	plane.position.y -= 2500;
+	plane.position.y -= 250;
 	return plane;
 };
+
 
  
