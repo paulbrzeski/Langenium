@@ -74,18 +74,40 @@ players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	data.pX = playerPosition.x + diffX;
 	data.pZ = playerPosition.z + diffZ;
 	
-	water.position.x = data.pX;
-	water.position.z = data.pZ;
-	
-	var rotateWater =  data.rY  * -1;
-	//console.log("rotateWater:" + rotateWater + ", player.rotation.y" + player.rotation.y);
-	
-	water.material.map.offset.x-= Math.sin(rotateWater) * velocity / 100000;
-	water.material.map.offset.y -= Math.cos(rotateWater) *velocity / 100000;
-	
+	// moves the water tiles position 
+	for (var tile = 0; tile < water.length; tile++) {
+		if (tile == 0) {
+			water[tile].position.x = data.pX;
+			water[tile].position.z = data.pZ;
+			
+			var rotateWater =  data.rY  * -1;
+
+			water[tile].material.map.offset.x-= Math.sin(rotateWater) * velocity / 100000;
+			water[tile].material.map.offset.y -= Math.cos(rotateWater) *velocity / 100000;
+		}
+	}	
 	
 	sky.position.x = data.pX;
 	sky.position.z = data.pZ;
+	
+	var 	env_scale = (player.position.y) / 10000, 
+			sky_scale = 1 + env_scale;
+	
+	if (env_scale -1 > water.length) {
+		env_scale = Math.round(env_scale-1);
+		for (var i = 1; i <= env_scale;  i++) {
+			water.push(new effects.water.makeWater(M));
+			var tile = water[water.length-1];
+			scene.add(water[water.length-1]);
+			water[i].position.x -= water[0].position.x + M * i;
+			water[i].position.z -= water[0].position.y  + M * i;
+			console.log(water[0].position);
+			console.log(water[1].position);
+		}
+	}
+	
+	// set sky scale
+	sky.scale.set(sky_scale,sky_scale,sky_scale);
 	
 	var moveVector = new THREE.Vector3(data.pX, data.pY, data.pZ);
 	var playerPositionVector = new THREE.Vector3(playerPosition.x, playerPosition.y, playerPosition.z);

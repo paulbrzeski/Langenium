@@ -30,8 +30,7 @@ var duration = 100,
 	lastKeyframe = 0, currentKeyframe = 0;
 
 /* Object definition */
-var 	M = 1000000,
-			winW = 1024, winH = 768,
+var 		winW = 1024, winH = 768,
 			objects = {
 							players: [],
 							bots: [],
@@ -94,7 +93,7 @@ function createScene() {
 	scene = new THREE.Scene();
 	scene.add(camera);
 	
-	var skyGeo = new THREE.CylinderGeometry(M / 2, M / 2, M, 64, 64, false);
+	var skyGeo = new THREE.CylinderGeometry(M / 2, M / 2, M, 64	, 64, false);
 
 	var sky_materials = [ new THREE.MeshBasicMaterial({ 
 			color: 0x66CCFF,
@@ -106,24 +105,12 @@ function createScene() {
 		 
 	for ( var i = 0; i < skyGeo.faces.length; i++ ) 
 	{
-		var diff = 1;
-		if (i > 0) {
-			diff = i - Math.round((i-1)/64) * 64 - 63 + 64;
-		}
-		console.log(diff);
-		if (diff > 0) {
-			skyGeo.faces[ i ].materialIndex = 0; 
-		}
-		else {
-			if (i > (4223-128)) {
+			if  (skyGeo.faces[ i ].centroid.y >  -16000) {
 				skyGeo.faces[ i ].materialIndex = 0;
 			}
 			else {
 				skyGeo.faces[ i ].materialIndex = 1;
 			}
-		}
-
-
 	}
 	
 	sky = new THREE.Mesh(skyGeo, new THREE.MeshFaceMaterial(sky_materials));
@@ -131,8 +118,9 @@ function createScene() {
 	sky.position.y = +16000;
 	scene.add(sky);
 	
-	water = new effects.water.makeWater(M);
-	scene.add(water);
+	water = [];
+	water.push(new effects.water.makeWater(M));
+	scene.add(water[0]);
 	
 	cloudEffect({x: -240000, y: 50000, z: -240000});
 		
@@ -160,13 +148,15 @@ function animate() {
 	TWEEN.update();
 	var shipsMoving = false;
 	
-	if (water) {
-		var myTime = clock.getElapsedTime() * 10;
-		for (var i = 0; i < water.geometry.vertices.length; i++) {
-			var n = Math.sin( i / 5 + ( myTime + i ) /  7);
-			water.geometry.vertices[i].y = 333.654321 * n;
+	if (water.length > 0) {
+		for (var tile = 0; tile < water.length; tile++) {		
+			var myTime = clock.getElapsedTime() * 10;
+			for (var i = 0; i < water[tile].geometry.vertices.length; i++) {
+				var n = Math.sin( i / 5 + ( myTime + i ) /  7);
+				water[tile].geometry.vertices[i].y = 333.654321 * n;
+			}
+			water[tile].geometry.verticesNeedUpdate = true;
 		}
-	    water.geometry.verticesNeedUpdate = true;
 	}
 	if (player) {
 	
