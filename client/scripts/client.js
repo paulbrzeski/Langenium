@@ -115,7 +115,7 @@ function createScene() {
 	
 	sky = new THREE.Mesh(skyGeo, new THREE.MeshFaceMaterial(sky_materials));
 	sky.name = "sky";
-	sky.position.y = +16000;
+	sky.position.y = 16000;
 	scene.add(sky);
 	
 	water = [];
