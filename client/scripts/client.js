@@ -91,7 +91,7 @@ function createScene() {
 	Create basic scene objects - sky, etc
 */
 	scene = new THREE.Scene();
-	scene.add(camera);
+	//scene.add(camera);
 	
 	var skyGeo = new THREE.CylinderGeometry(M / 2, M / 2, M, 64	, 64, false);
 
@@ -148,7 +148,7 @@ function animate() {
 	TWEEN.update();
 	var shipsMoving = false;
 	
-	if (water.length > 0) {
+	if (water.length  == 1) {
 		for (var tile = 0; tile < water.length; tile++) {		
 			var myTime = clock.getElapsedTime() * 10;
 			for (var i = 0; i < water[tile].geometry.vertices.length; i++) {
@@ -218,9 +218,9 @@ function onWindowResize() {
 	updateWinSizeVariables();
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
-
+ 
 	renderer.setSize( window.innerWidth, window.innerHeight );
-
+		console.log(window.innerWidth);
 }
 
 function updateWinSizeVariables(){

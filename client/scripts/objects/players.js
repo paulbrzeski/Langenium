@@ -90,21 +90,9 @@ players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	sky.position.x = data.pX;
 	sky.position.z = data.pZ;
 	
-	var 	env_scale = (player.position.y) / 10000, 
-			sky_scale = 1 + env_scale;
+	var 	sky_scale = 1 + (player.position.y / 20000);
 	
-	if (env_scale -1 > water.length) {
-		env_scale = Math.round(env_scale-1);
-		for (var i = 1; i <= env_scale;  i++) {
-			water.push(new effects.water.makeWater(M));
-			var tile = water[water.length-1];
-			scene.add(water[water.length-1]);
-			water[i].position.x -= water[0].position.x + M * i;
-			water[i].position.z -= water[0].position.y  + M * i;
-			console.log(water[0].position);
-			console.log(water[1].position);
-		}
-	}
+	effects.water.update();
 	
 	// set sky scale
 	sky.scale.set(sky_scale,sky_scale,sky_scale);
@@ -136,7 +124,10 @@ players.prototype.movePlayer = function (velocity, playerPosition, data) {
 		}); 
 	}
 	
-	e.moveShip(player, true, { name: "move", type: "player", details: data });
 		
-	$("#playerPosition").html("<div><strong>Player</strong><br />pX:&nbsp;"+Math.round(player.position.x)+"<br />pY:&nbsp;"+Math.round(player.position.y)+"<br />pZ:&nbsp;"+Math.round(player.position.z)+"<br />rY:&nbsp;"+Math.round(player.rotation.y)+"<br />d:&nbsp;" + Math.round(data.d * 1000) + "</div>");
+	e.moveShip(player, true, { name: "move", type: "player", details: data });
+	var 		html = 		"<div><strong>";
+				html +=	"<strong>Player</strong><br />pX:&nbsp;"+Math.round(player.position.x)+"<br />pY:&nbsp;"+Math.round(player.position.y)+"<br />pZ:&nbsp;"+Math.round(player.position.z);
+				html += 	"<br />rY:&nbsp;"+Math.round(player.rotation.y)+"<br />d:&nbsp;" + Math.round(data.d * 1000) + "</div>";
+	$("#playerPosition").html(html);
 }
