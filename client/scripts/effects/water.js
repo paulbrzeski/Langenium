@@ -25,7 +25,7 @@ var water = function() {
 
 water.prototype.makeWater = function(M, pos) {
 	
-	var 	water_res = 100,
+	var 	water_res = 111,
 			water_texture = 12;
 	if (water.length > 0) { water_res = 1; }
 	
@@ -52,15 +52,13 @@ water.prototype.makeWater = function(M, pos) {
 };
 
 function makeEnvScale() {
-	var env_scale = 1;
+	var env_scale = 10000;
 	
 	if (player) {
 		env_scale = new THREE.Vector3().getPositionFromMatrix(player.matrixWorld).y;
 	}
 
-	env_scale = Math.floor(env_scale / 10000);
-	
-	$("#log").html(env_scale);
+	env_scale = Math.floor(env_scale / (9980 + water.length * water.length * water.length));
 	
 	return env_scale;
 }
@@ -69,24 +67,32 @@ water.prototype.update = function() {
 	
 	var 	env_scale = makeEnvScale(),
 			water_length = water.length,
-			scale_multiplier = env_scale - 1, // to account for the coordinates in the excel sheet when multiplying the tiles and check previous scale
+			scale_multiplier = env_scale + 1, // to account for the coordinates in the excel sheet when multiplying the tiles and check previous scale
 			expected_tile_count = 1;
 
-	for (var scale = 1; scale < env_scale; scale++) {
-		expected_tile_count += scale * 8;
+	for (var scale = 1; scale < scale_multiplier; scale++) {
+		expected_tile_count += 8;
 	}
+	expected_tile_count += scale_multiplier * 8;
+
+	//console.log("env_scale: "+ env_scale + " exp: " + expected_tile_count + " scale_multiplier: " + scale_multiplier+ " water: " + water.length);
 	
-	//console.log("exp: " + expected_tile_count + " env_scale: " + env_scale);
-	
-	if (water.length < expected_tile_count) { 
-		effects.water.addTiles(env_scale -1, expected_tile_count);
+	if (water.length < expected_tile_count) { 	
+		if (water.length == 1) {
+			for (var i = 0; i < scale_multiplier; i++) {
+				effects.water.addTiles(i, expected_tile_count);
+			}
+		}
+		else {
+			effects.water.addTiles(scale_multiplier, expected_tile_count);
+		}
 	}
 }
  
  water.prototype.addTiles = function(env_scale, expected_tile_count){
 	var pos = new THREE.Vector3(0,0,0);
 	
-	if (water.length > 0) {
+	if (player) {
 		pos = new THREE.Vector3().getPositionFromMatrix(player.matrixWorld);
 	}
 	
@@ -95,18 +101,12 @@ water.prototype.update = function() {
 			x =  pos.x,
 			z = pos.z;
 			
-	var 	log =  "Scale: " + env_scale + "<br>";
-	log += "Previous Water # " + water.length + "<br>";
-	log += "Expected # "+ expected_tile_count + "<br>";
-	log += "Diff to next # "+ tile_count * 4 + "<br>";
-	log += "Tiles per side # " + tile_count + "<br>";
-	
 	 for (var side = 1; side <= 4; side++) {
-		log += "-- Side: " + side + "<br>";
+
 		for (var tile_index = 1; tile_index <= tile_count; tile_index++) {
-			log += "---- Adding tile " + tile_index + "<br>";
-			var	x_mod = M, 
-					z_mod =M;
+
+			var	x_mod = M , 
+					z_mod = M ;
 			
 			if (side == 1) { 
 				if (tile_index <= tile_count / 2) {
@@ -150,22 +150,20 @@ water.prototype.update = function() {
 			}
 			
 			var tile = new effects.water.makeWater(M, pos);
+			tile.position.ox = x_mod;
+			tile.position.oz = z_mod;
 			tile.position.x =  x_mod; 
-			 tile.position.z =  z_mod;
+			tile.position.z =  z_mod;
 	
-			
-			log += "-------- x: " + Math.floor(tile.position.x) + "<br>";
-			log += "-------- z: " + Math.floor(tile.position.z) + "<br>";
 			
 			tile_array.push(tile);
 		}
 	 }
-	log += "Added " + tile_array.length + " tiles<br>";
-	
+
+	console.log(tile_array.length);
 	tile_array.forEach(function(tile){
 		water.push(tile);
 		scene.add(water[water.length-1]);
 	});
-	log += "New Water # " + water.length + " tiles";
-	//$("#log").html(log);
+
  };

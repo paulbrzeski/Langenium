@@ -17,12 +17,12 @@ players.prototype.playerInput = function (delta){
 			move = false;
 	
 	if (keyboard.pressed("W")){
-		if (player.velocity > -150) { player.velocity -= 25; }
+		if (player.velocity > -7.5) { player.velocity -= .75; }
 		move = true;
 		keyboardInput.pZ = 1;
 	}
 	if (keyboard.pressed("S")){
-		if (player.velocity < 75) { player.velocity += 25; }
+		if (player.velocity < 5) { player.velocity += .75; }
 		move = true;
 		keyboardInput.pZ = -1;
 	}
@@ -59,9 +59,11 @@ players.prototype.playerInput = function (delta){
 
 players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	
-	var 		velocityYChange = 120, //60,
+	var 		velocityYChange = 600 * data.d,
 				rotateAngle = 0.01744444444444444444444444444444 * 100 * data.d;
 
+	velocity = velocity * 100 * data.d;
+	
 	if (data.rY > 0) { data.rY = rotateAngle; }						// left
 	if (data.rY < 0) { data.rY = -rotateAngle; }						// right
 	data.rY = (data.rY + data.rY * Math.PI / 180);
@@ -81,34 +83,38 @@ players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	// moves the water tiles position 
 	
 	for (var tile = 0; tile < water.length; tile++) {
+	
+		var rotateWater =  data.rY  * -1;
+		water[tile].material.map.offset.x-= Math.sin(rotateWater) * velocity / 100000;
+		water[tile].material.map.offset.y -= Math.cos(rotateWater) *velocity / 100000;
 		
-			water[tile].position.x += diffX;
-			water[tile].position.z += diffZ;
-			
-			var rotateWater =  data.rY  * -1;
-
-			water[tile].material.map.offset.x-= Math.sin(rotateWater) * velocity / 100000;
-			water[tile].material.map.offset.y -= Math.cos(rotateWater) *velocity / 100000;
-		
+		if (tile == 0) {
+			water[0].position.x = player.position.x;
+			water[0].position.z = player.position.z;
+		}
+		else {
+			water[tile].position.x = water[tile].position.ox + data.pX;
+			water[tile].position.z = water[tile].position.oz + data.pZ;
+		}
 	}	
 	
 	var height_diff = 5000 + 2000 * (water.length-1);
 	
 	sky.position.x = data.pX;
 	
-	var ySkyDiff =  (
-		(new THREE.Vector3().getPositionFromMatrix(player.matrixWorld).y) + 1000 * makeEnvScale()  + (water.length - 1)
-	);
-	//console.log(ySkyDiff);
-	sky.position.y =  16000 * (1 + (player.position.y / 20000));
 	sky.position.z = data.pZ;
+	
 	
 	var 	sky_scale = 1 + (player.position.y / 20000);
 	
 	effects.water.update();
 	
 	// set sky scale
-	if (player.position.y > 0) { sky.scale.set(sky_scale,sky_scale,sky_scale); }
+	if (sky_scale > 1) {
+		sky.position.y =  16000 * (1 + (player.position.y / 20000));
+		sky.scale.set(sky_scale,sky_scale,sky_scale);
+	}
+	
 	
 	sky.updateMatrixWorld();
 	

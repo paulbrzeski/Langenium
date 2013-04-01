@@ -70,8 +70,9 @@ function initializeClient() {
 	camera = new THREE.PerspectiveCamera( 45, (winW) / (winH), 1, M * 100 );
 	//camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 500, 1000 );
 	camera.fov = 720;
-	camera.position.y = 6;
-	camera.position.z = 50;
+	camera.position.y = 12;
+	camera.position.z = 75;
+
 	
 	controls = new THREE.TrackballControls(camera);
 	controls.target.set(0, 0, 0);
@@ -100,7 +101,7 @@ function createScene() {
 			shading: THREE.SmoothShading, 
 			side: THREE.DoubleSide
 		}),
-		 new THREE.MeshBasicMaterial( { color: 0x003366, side: THREE.DoubleSide,  } )
+		 new THREE.MeshBasicMaterial( { color: 0x002244, side: THREE.DoubleSide,  } )
 		 ];
 		 
 	for ( var i = 0; i < skyGeo.faces.length; i++ ) 
@@ -153,16 +154,17 @@ function animate() {
 	
 	if (!player) { playerHeightOk = true; }
 	else {
-		if (player.position.y < 300000) {
+		if (player.position.y < 80000) {
 			playerHeightOk = true;
 		}
 	}
 	
 	if ((water.length  >= 1)&&(playerHeightOk == true)){
 		var myTime = clock.getElapsedTime() * 10;
+		
 		for (var i = 0; i < water[0].geometry.vertices.length; i++) {
 			var n = Math.sin( i / 5 + ( myTime + i ) /  7);
-			water[0].geometry.vertices[i].z += 5.654321 * n;
+			water[0].geometry.vertices[i].z += 11.654321 * n;
 			water[0].geometry.vertices[i].y = 444.654321 * n;
 		}
 		water[0].geometry.verticesNeedUpdate = true;
@@ -192,15 +194,13 @@ function animate() {
 		if  (player.velocity != 0) {
 			player.velocity *= .996;
 		}
-		if (player.position.y < 50) {
-			player.position.y += 6;
-		}
+
 	}
 	
 	
 	
 	ships.forEach(function(ship,index){
-		if (ship.position.y < 480) { ship.position.y += 12; }
+		if (ship.position.y < 0) { ship.position.y += 1.2; }
 		if (ship.rotation.z != 0) { ship.rotation.z -= ship.rotation.z / 50; }
 	});
 	
