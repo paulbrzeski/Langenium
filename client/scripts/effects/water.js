@@ -23,17 +23,18 @@ var water = function() {
 
 // Main
 
-water.prototype.makeWater = function(M) {
+water.prototype.makeWater = function(M, pos) {
 	
-	var water_res = 100;
-	if (water) { water_res = 1; }
+	var 	water_res = 100,
+			water_texture = 12;
+	if (water.length > 0) { water_res = 1; }
 	
 	var geometry = new THREE.PlaneGeometry( M, M , water_res, water_res );	
 	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 	
 	var waterTexture = THREE.ImageUtils.loadTexture( "assets/water.jpg" );
 	waterTexture.wrapS = waterTexture.wrapT = THREE.RepeatWrapping;
-	waterTexture.repeat.set( 12, 12 );
+	waterTexture.repeat.set( water_texture, water_texture );
 	
 	var material = new THREE.MeshLambertMaterial( {
 		color: 0x006699,
@@ -50,13 +51,26 @@ water.prototype.makeWater = function(M) {
 	return plane;
 };
 
+function makeEnvScale() {
+	var env_scale = 1;
+	
+	if (player) {
+		env_scale = new THREE.Vector3().getPositionFromMatrix(player.matrixWorld).y;
+	}
+
+	env_scale = Math.floor(env_scale / 10000);
+	
+	$("#log").html(env_scale);
+	
+	return env_scale;
+}
+
 water.prototype.update = function() {
-	var 	height_diff = 6000,
-			env_scale = Math.round(((player.position.y) / height_diff)-1),
+	
+	var 	env_scale = makeEnvScale(),
 			water_length = water.length,
 			scale_multiplier = env_scale - 1, // to account for the coordinates in the excel sheet when multiplying the tiles and check previous scale
 			expected_tile_count = 1;
-			
 
 	for (var scale = 1; scale < env_scale; scale++) {
 		expected_tile_count += scale * 8;
@@ -70,8 +84,16 @@ water.prototype.update = function() {
 }
  
  water.prototype.addTiles = function(env_scale, expected_tile_count){
+	var pos = new THREE.Vector3(0,0,0);
+	
+	if (water.length > 0) {
+		pos = new THREE.Vector3().getPositionFromMatrix(player.matrixWorld);
+	}
+	
 	var 	tile_array = [],
-			tile_count = (env_scale * 2);
+			tile_count = (env_scale * 2),
+			x =  pos.x,
+			z = pos.z;
 			
 	var 	log =  "Scale: " + env_scale + "<br>";
 	log += "Previous Water # " + water.length + "<br>";
@@ -83,9 +105,7 @@ water.prototype.update = function() {
 		log += "-- Side: " + side + "<br>";
 		for (var tile_index = 1; tile_index <= tile_count; tile_index++) {
 			log += "---- Adding tile " + tile_index + "<br>";
-			var	x = water[0].position.x,
-					z = water[0].position.z,
-					x_mod = M, 
+			var	x_mod = M, 
 					z_mod =M;
 			
 			if (side == 1) { 
@@ -129,13 +149,13 @@ water.prototype.update = function() {
 				}
 			}
 			
-			var tile = new effects.water.makeWater(M);
+			var tile = new effects.water.makeWater(M, pos);
+			tile.position.x =  x_mod; 
+			 tile.position.z =  z_mod;
+	
 			
-			tile.position.x =  x_mod ;
-			tile.position.z = z_mod ;
-			
-			log += "-------- x: " + Math.round(tile.position.x) + "<br>";
-			log += "-------- z: " + Math.round(tile.position.z) + "<br>";
+			log += "-------- x: " + Math.floor(tile.position.x) + "<br>";
+			log += "-------- z: " + Math.floor(tile.position.z) + "<br>";
 			
 			tile_array.push(tile);
 		}
@@ -147,5 +167,5 @@ water.prototype.update = function() {
 		scene.add(water[water.length-1]);
 	});
 	log += "New Water # " + water.length + " tiles";
-	$("#log").html(log);
+	//$("#log").html(log);
  };

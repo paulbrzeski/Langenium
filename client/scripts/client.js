@@ -67,11 +67,11 @@ function initializeClient() {
 		antialias : true
 	});
 	
-	camera = new THREE.PerspectiveCamera( 45, (winW) / (winH), 1, M );
+	camera = new THREE.PerspectiveCamera( 45, (winW) / (winH), 1, M * 100 );
 	//camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 500, 1000 );
-	camera.fov = 360;
-	camera.position.y = 4;
-	camera.position.z = 25;
+	camera.fov = 720;
+	camera.position.y = 6;
+	camera.position.z = 50;
 	
 	controls = new THREE.TrackballControls(camera);
 	controls.target.set(0, 0, 0);
@@ -115,12 +115,13 @@ function createScene() {
 	
 	sky = new THREE.Mesh(skyGeo, new THREE.MeshFaceMaterial(sky_materials));
 	sky.name = "sky";
-	sky.position.y = 16000;
 	scene.add(sky);
 	
 	water = [];
 	water.push(new effects.water.makeWater(M));
 	scene.add(water[0]);
+	
+	effects.water.update();
 	
 	cloudEffect({x: -240000, y: 50000, z: -240000});
 		
@@ -148,26 +149,32 @@ function animate() {
 	TWEEN.update();
 	var shipsMoving = false;
 	
-	if (water.length  == 1) {
-		for (var tile = 0; tile < water.length; tile++) {		
-			var myTime = clock.getElapsedTime() * 10;
-			for (var i = 0; i < water[tile].geometry.vertices.length; i++) {
-				var n = Math.sin( i / 5 + ( myTime + i ) /  7);
-				water[tile].geometry.vertices[i].y = 333.654321 * n;
-			}
-			water[tile].geometry.verticesNeedUpdate = true;
+	var playerHeightOk = false;
+	
+	if (!player) { playerHeightOk = true; }
+	else {
+		if (player.position.y < 300000) {
+			playerHeightOk = true;
 		}
 	}
-	if (player) {
 	
+	if ((water.length  >= 1)&&(playerHeightOk == true)){
+		var myTime = clock.getElapsedTime() * 10;
+		for (var i = 0; i < water[0].geometry.vertices.length; i++) {
+			var n = Math.sin( i / 5 + ( myTime + i ) /  7);
+			water[0].geometry.vertices[i].z += 5.654321 * n;
+			water[0].geometry.vertices[i].y = 444.654321 * n;
+		}
+		water[0].geometry.verticesNeedUpdate = true;
+	}
+	
+	if (player) {	
 		scene.children[1].rotation.y = Math.cos(delta) / 15000;
-		  
-		
+
 		if  (player.velocity != 0) {
 			player.velocity *= .996;
 		}
-		
-	
+
 		if ( keyframe != currentKeyframe ) {
 			player.morphTargetInfluences[ lastKeyframe ] = 0;
 			player.morphTargetInfluences[ currentKeyframe ] = 1;
@@ -190,8 +197,10 @@ function animate() {
 		}
 	}
 	
+	
+	
 	ships.forEach(function(ship,index){
-		if (ship.position.y < 50) { ship.position.y += 3; }
+		if (ship.position.y < 480) { ship.position.y += 12; }
 		if (ship.rotation.z != 0) { ship.rotation.z -= ship.rotation.z / 50; }
 	});
 	
@@ -220,7 +229,7 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
  
 	renderer.setSize( window.innerWidth, window.innerHeight );
-		console.log(window.innerWidth);
+		//console.log(window.innerWidth);
 }
 
 function updateWinSizeVariables(){
