@@ -45,17 +45,22 @@ var 		winW = 1024, winH = 768,
 
 var isFiring = false;
 $(document).bind("mousedown", function(event) {
-    switch (event.which) {
-        case 1:
-            isFiring = true;
-            break;
-        case 2:
-            //zoom IGNORE
-            break;
-        case 3:
-            //rotate
-            break;
-    }
+	if (window.location.href.indexOf("editor") > 0) { 
+		ui.editor.onClick(event);
+	}
+	else {
+		switch (event.which) {
+			case 1:
+				isFiring = true;
+				break;
+			case 2:
+				//zoom IGNORE
+				break;
+			case 3:
+				//rotate
+				break;
+		}
+	}
 });
 
 function initializeClient() {
@@ -133,9 +138,7 @@ function createScene() {
 	hemiLight.position.set( 0, M, 0 );
 	scene.add( hemiLight );
 	if (window.location.href.indexOf("editor") > 0) {
-			
-			var hello = new ed.makeControls();
-			ui.makeDialog("editor_tools", hello);
+			ui.makeDialog("editor_tools", ui.editor.makeControls());
 		}
 }	
 
@@ -190,7 +193,7 @@ function animate() {
 		player.morphTargetInfluences[ lastKeyframe ] = 1 - player.morphTargetInfluences[ keyframe ];
 		player.updateMatrix();
 
-		p.movePlayer(player.velocity, player.position, p.playerInput(delta));
+		objects.players.movePlayer(player.velocity, player.position, objects.players.playerInput(delta));
 		if  (player.velocity != 0) {
 			player.velocity *= .996;
 		}

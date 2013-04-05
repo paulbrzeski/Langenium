@@ -52,7 +52,7 @@ players.prototype.playerInput = function (delta){
 	}
 	
 	if (move == true) {
-		e.socket.emit('move', keyboardInput);
+		events.socket.emit('move', keyboardInput);
 	}
 	return keyboardInput;
 }
@@ -121,7 +121,7 @@ players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	var moveVector = new THREE.Vector3(data.pX, data.pY, data.pZ);
 	var playerPositionVector = new THREE.Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
 	
-	var collisions = e.detectCollision(playerPositionVector, moveVector, o.world_map);
+	var collisions = events.detectCollision(playerPositionVector, moveVector, objects.world_map);
 	
 	if (collisions.length > 0) {
 		collisions.forEach(function(collision, index){
@@ -146,7 +146,7 @@ players.prototype.movePlayer = function (velocity, playerPosition, data) {
 	}
 	
 		
-	e.moveShip(player, true, { name: "move", type: "player", details: data });
+	events.moveShip(player, true, { name: "move", type: "player", details: data });
 	var 		html = 		"<div><strong>";
 				html +=	"<strong>Player</strong><br />pX:&nbsp;"+Math.round(player.position.x)+"<br />pY:&nbsp;"+Math.round(player.position.y)+"<br />pZ:&nbsp;"+Math.round(player.position.z);
 				html += 	"<br />rY:&nbsp;"+Math.round(player.rotation.y)+"<br />d:&nbsp;" + Math.round(data.d * 1000) + "</div>";

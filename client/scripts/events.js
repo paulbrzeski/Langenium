@@ -13,8 +13,7 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 // This object
-var events = function(o) {
-	objects = o;
+var events = function() {
     this.socket = this.setEventHandlers(
             io.connect(this.getUrl())
         );
@@ -37,7 +36,7 @@ events.prototype.getUrl = function () {
 events.prototype.setEventHandlers = function (socket) {
     socket.emit("login", { username: "Saggy Nuts" });
 	socket.on("load", function(data) { 
-		o.loadObject(data);
+		objects.loadObject(data);
 	});
 	return socket;
 }

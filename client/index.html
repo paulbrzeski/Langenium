@@ -24,6 +24,7 @@
 	<script src="libs/SimplexNoise.js"></script> 
 	<script src="scripts/client.js"></script>  
 	<script src="scripts/editor.js"></script>  
+	<script src="scripts/effects.js"></script>  
 	<script src="scripts/effects/bullets.js"></script>  
 	<script src="scripts/effects/particles.js"></script>  
 	<script src="scripts/effects/water.js"></script>  
@@ -45,23 +46,22 @@
 		var keyboard = new THREEx.KeyboardState(), clock = new THREE.Clock();
 		var player, ships = [], bots = [], bullets = [], particle_systems = [], ui = [];
 		
-		var effects = {};
+		var effects = new effects();
 		effects.water = new water();
 		
-		// Setup the global objects variable
-		var o = new objects();
-		var p = new players();
+		var objects = new objects();
+		objects.players = new players();
 		
 		//	Setup the global socket variable
-		var e = new events(o);
+		var events = new events();
         
         var ui = new user_interface();
         ui.makeDialog("playerPosition", ui.playerPosition);
 		
+		ui.editor = new editor();
+		
 		//var log_ui = { width: 250, alignX: "left", alignY: "top", data: "" };
 		//ui.makeDialog("log",log_ui);
-		
-		var ed = new editor();
 		
 		
 		

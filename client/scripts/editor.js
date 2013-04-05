@@ -24,14 +24,14 @@ var editor = function() {
 // Main
 
 	$("#editor_tools input[name='scene_objects']").live("click", function(e){
-		$("#editor_tools").html(ed.makeControls().data);
-		$("#editor_tools").append(ed.getProperties(this.value));
+		$("#editor_tools").html(ui.editor.makeControls().data);
+		$("#editor_tools").append(ui.editor.getProperties(this.value));
 	});
 
 editor.prototype.makeControls = function () {
 		var html = { width: 450, alignX: "left", alignY: "top", data: "" };
 		
-		html.data += "<a href='#' onclick='ed.refresh();'>Refresh editor</a>";
+		html.data += "<a href='#' onclick='ui.editor.refresh();'>Refresh editor</a>";
 		for (var i in scene.__objects) {
 			html.data += "<br><input type='radio' name='scene_objects' id='et_" + scene.__objects[i].name + i + "' value='"+i+"'>";
 			html.data += "<label for='et_" + scene.__objects[i].name + i + "'>" + scene.__objects[i].name + "</label>";
@@ -41,7 +41,7 @@ editor.prototype.makeControls = function () {
 };
 editor.prototype.refresh = function() {
 	
-	$("#editor_tools").html(ed.makeControls().data);
+	$("#editor_tools").html(ui.editor.makeControls().data);
 
 };
 
@@ -75,6 +75,29 @@ editor.prototype.getProperties = function(id) {
 	html += "</ul>";
 	return html;
 };
+var ray = new THREE.Raycaster();
+	var projector = new THREE.Projector();
+editor.prototype.onClick = function ( event ) {
 
+	event.preventDefault();
+
+				var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * M, - ( event.clientY / window.innerHeight ) * M , 0.5 );
+				projector.unprojectVector( vector, camera );
+
+				var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+				var intersects = raycaster.intersectObjects( scene.__objects );
+
+				if ( intersects.length > 0 ) {
+					
+						console.log(intersects[0].object.name);
+				
+					
+	
+					
+				}
+
+			
+	};
 
 
