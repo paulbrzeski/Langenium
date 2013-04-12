@@ -11,36 +11,14 @@
 	padding: 1em;
 	margin: .5em;
 	font: 10px Verdana;
-	overflow-y: scroll!important;
 	max-height: 80%;
-}
-
-
-.dialog a {
-position: relative;
-	text-decoration: none;
-	padding: .5em 1em;
-	color: #FFF;
-	background-color: #333;
 	
 }
 
-.dialog a:after {
-	margin-right: -10px;
-	top: 0;
-	right: 0;
-	position: absolute;
-	content:"";
-    width:0;
-    height:0;
-    border-top:11px solid transparent;
-    border-bottom:11px solid transparent;
-    border-left:11px solid #333333;
+#editor_tools .button.refresh {
+	margin: 0px auto;
+}
+.ui-menu .ui-menu-item a {
+	min-width: 100px;
+}
 
-}
-.dialog a:hover {
-	background-color: #666;
-}
-.dialog a:hover:after {
-	border-left:11px solid #666666;
-}

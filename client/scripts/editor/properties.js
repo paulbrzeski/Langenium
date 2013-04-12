@@ -1,0 +1,103 @@
+  /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	Editor
+	This class defines editor objects
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    Globals
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+var properties = function() {
+   
+   return this;
+};
+
+
+/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    Functions
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+// Events
+
+$("#properties").live("mouseover",function(e){
+	controls.enabled = false;
+	console.log("disabled");
+});
+$("#properties").live("mouseout",function(e){
+	controls.enabled = true;
+	console.log("enabled");
+});
+
+// Helpers
+properties.prototype.makeControls = function () {
+	var html = { width: 250, alignX: "left", alignY: "bottom", data: "" };
+	
+	return html;
+};
+
+properties.prototype.getPropertyList = function(id) {
+	var html = "<h3>Properties</h3>";
+	html += "<ul class='menu'>";
+	for (var i in scene.__objects[id]) {
+		var val = scene.__objects[id][i];
+		if ((typeof(val) != "object")&&(typeof(val) != "function")) {
+			html += "<li><a href='#'>" + i + ": " + val +"</a></li>";
+		}
+		else {
+			if (typeof(val) == "object") {
+				html += "<li><a href='#'>" +i + "</a><ul>";
+				for (var j in val) {
+					var jval = val[j];
+					if ((typeof(jval) != "object")&&(typeof(jval) != "function")) {
+						if ((typeof(jval) == "string")&&(jval.length > 150)) {
+							html += "<li><a href='#'>" + j + ": " + jval.substring(0,100)+"</a></li>";
+						}
+						else {
+							html += "<li><a href='#'>" + j + ": " + jval +"</a></li>";
+						}
+					}
+				}
+				html += "</ul></li>";
+			}
+			else {
+				//html += "<li><a href='#'>" + i + ": " + val +"</a></li>"; // functions
+			}
+		}
+	}
+	html += "</ul>";
+	return html;
+};
+
+properties.prototype.onClick = function ( event ) {
+
+
+
+				var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+				projector.unprojectVector( vector, camera );
+
+				var raycaster = new THREE.Raycaster( camera.matrixWorld.getPosition(), vector.sub( camera.matrixWorld.getPosition() ).normalize() );
+
+				var intersects = raycaster.intersectObjects( scene.__objects );
+
+				if ( intersects.length > 0 ) {
+					ui.editor.properties.loadProperties(intersects[0].object.id);
+					
+				}
+
+	};
+
+
+properties.prototype.loadProperties = function(id) {
+	// clears and populates the properties window
+	for (var i in scene.__objects) {
+			if (scene.__objects[i].id == id) {
+				$("#properties").html(this.getPropertyList(i));
+				$("#properties .menu").menu();
+			}
+		}
+};

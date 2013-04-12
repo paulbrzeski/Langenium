@@ -155,7 +155,7 @@ objects.prototype.renderObject = function (mesh, type, instruction) {
 		player.velocity = 0;
 		
 		player.add(camera);
-	
+		camera.lookAt(player);
 		scene.add(player);
 		ships.push(player);
 

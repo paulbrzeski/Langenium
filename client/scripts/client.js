@@ -7,8 +7,10 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 $(document).ready(function(){
+
 	initializeClient();
 	animate();
+	
 });
 
 
@@ -46,7 +48,7 @@ var 		winW = 1024, winH = 768,
 var isFiring = false;
 $(document).bind("mousedown", function(event) {
 	if (window.location.href.indexOf("editor") > 0) { 
-		ui.editor.onClick(event);
+		ui.editor.properties.onClick(event);
 	}
 	else {
 		switch (event.which) {
@@ -72,9 +74,9 @@ function initializeClient() {
 		antialias : true
 	});
 	
-	camera = new THREE.PerspectiveCamera( 45, (winW) / (winH), 1, M * 100 );
+	camera = new THREE.PerspectiveCamera( 45, (winW) / (winH), 1, M / 3 * 2 );
 	//camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 500, 1000 );
-	camera.fov = 720;
+
 	camera.position.y = 12;
 	camera.position.z = 75;
 
@@ -138,8 +140,12 @@ function createScene() {
 	hemiLight.position.set( 0, M, 0 );
 	scene.add( hemiLight );
 	if (window.location.href.indexOf("editor") > 0) {
-			ui.makeDialog("editor_tools", ui.editor.makeControls());
-		}
+		ui.makeDialog("editor_tools", ui.editor.makeControls());
+		$("#editor_tools .button").button();
+		$("#editor_tools .menu").menu();
+		
+		ui.makeDialog("properties", ui.editor.properties.makeControls());
+	}
 }	
 
 function animate() {
@@ -228,10 +234,10 @@ function onWindowResize() {
 	Resizes the renderer
 */
 	updateWinSizeVariables();
-	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.aspect = winW / winH;
 	camera.updateProjectionMatrix();
  
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setSize( winW, winH );
 		//console.log(window.innerWidth);
 }
 

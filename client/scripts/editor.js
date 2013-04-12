@@ -17,87 +17,66 @@ var editor = function() {
    return this;
 };
 
+var ray = new THREE.Raycaster();
+var projector = new THREE.Projector();
+
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     Functions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-// Main
+// Events
 
-	$("#editor_tools input[name='scene_objects']").live("click", function(e){
-		$("#editor_tools").html(ui.editor.makeControls().data);
-		$("#editor_tools").append(ui.editor.getProperties(this.value));
-	});
+$("#editors_tools").live("mouseenter",function(e){
+	controls.enabled = false;
+});
+$("#editors_tools").live("mouseout",function(e){
+	controls.enabled = true;
+});
+
+$("#editor_tools input[name='scene_objects']").live("click", function(e){
+	$("#editor_tools").html(ui.editor.makeControls().data);
+	$("#editor_tools").append(ui.editor.getProperties(this.value));
+});
+
+// Helpers
 
 editor.prototype.makeControls = function () {
-		var html = { width: 450, alignX: "left", alignY: "top", data: "" };
+		var html = { width: 250, alignX: "left", alignY: "top", data: "" };
 		
-		html.data += "<a href='#' onclick='ui.editor.refresh();'>Refresh editor</a>";
+		html.data += "<h3>Tools</h3>";
+		html.data += "<ul class='menu'>";
+		
+		html.data += "<li><a href='#'>Environmental Objects</a><ul>";
 		for (var i in scene.__objects) {
-			html.data += "<br><input type='radio' name='scene_objects' id='et_" + scene.__objects[i].name + i + "' value='"+i+"'>";
-			html.data += "<label for='et_" + scene.__objects[i].name + i + "'>" + scene.__objects[i].name + "</label>";
+
+			html.data += "<li><a href='#' onclick='ui.editor.properties.loadProperties("+i+")'>" + scene.__objects[i].name + " (" + i+ ")</a></li>";
 		}
+		html.data += "</ul></li>";
 		
+		html.data += "<li><a href='#'>Add</a>";
+		html.data += "<ul class='menu'>";
+			html.data += "<li><a href='#'>Union</a><ul>";
+			html.data += "<li><a href='#'>Platform</a></li>";
+			html.data += "</ul></li>";
+		html.data += "</ul></li>";
+		
+		html.data += "</ul><br />";
+		
+		
+		html.data += "<a class='refresh button' href='#' onclick='ui.editor.refresh();' >Refresh editor</a>";
 		return html;
 };
+
 editor.prototype.refresh = function() {
 	
 	$("#editor_tools").html(ui.editor.makeControls().data);
-
+	$("#editor_tools .button").button();
+	$("#editor_tools .menu").menu();
 };
 
 // Helpers
 
-editor.prototype.getProperties = function(id) {
-	var html = "<ul>";
-	for (var i in scene.__objects[id]) {
-		var val = scene.__objects[id][i];
-		if ((typeof(val) != "object")&&(typeof(val) != "function")) {
-			html += "<li>" + i + ": " + val +"</li>";
-		}
-		else {
-			if (typeof(val) == "object") {
-				html += "<li>" +i + "<ul>";
-				for (var j in val) {
-					var jval = val[j];
-					if ((typeof(jval) != "object")&&(typeof(jval) != "function")) {
-						if ((typeof(jval) == "string")&&(jval.length > 150)) {
-							html += "<li>" + j + ": " + jval.substring(0,100)+"</li>";
-						}
-						else {
-							html += "<li>" + j + ": " + jval +"</li>";
-						}
-					}
-				}
-				html += "</ul></li>";
-			}
-		}
-	}
-	html += "</ul>";
-	return html;
-};
-var ray = new THREE.Raycaster();
-	var projector = new THREE.Projector();
-editor.prototype.onClick = function ( event ) {
 
-	event.preventDefault();
 
-				var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * M, - ( event.clientY / window.innerHeight ) * M , 0.5 );
-				projector.unprojectVector( vector, camera );
-
-				var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-
-				var intersects = raycaster.intersectObjects( scene.__objects );
-
-				if ( intersects.length > 0 ) {
-					
-						console.log(intersects[0].object.name);
-				
-					
-	
-					
-				}
-
-			
-	};
 
 

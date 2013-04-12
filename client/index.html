@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<title>Langenium Test Page</title>
-		<link href="styles/jquery-ui-1.9.2.custom.css" rel="stylesheet">
+		<link href="styles/jquery-ui-1.10.2.custom.css" rel="stylesheet">
 		<link href="styles/game.css" rel="stylesheet">
 		<link href="styles/ui.css" rel="stylesheet">
 	</head>
@@ -13,7 +13,7 @@
 	</body>
 	<script src="libs/jquery.min.js"></script>
 	<script src="libs/jQueryRotateCompressed.2.2.js"></script>
-	<script src="libs/jquery-ui-1.9.2.custom.min.js"></script>
+	<script src="libs/jquery-ui-1.10.2.custom.min.js"></script>
 	<script src="libs/socket.io.min.js"></script>
 	<script src="libs/three.min.js"></script>
 	<script src="libs/tween.min.js"></script>
@@ -24,6 +24,7 @@
 	<script src="libs/SimplexNoise.js"></script> 
 	<script src="scripts/client.js"></script>  
 	<script src="scripts/editor.js"></script>  
+	<script src="scripts/editor/properties.js"></script>  
 	<script src="scripts/effects.js"></script>  
 	<script src="scripts/effects/bullets.js"></script>  
 	<script src="scripts/effects/particles.js"></script>  
@@ -59,6 +60,7 @@
         ui.makeDialog("playerPosition", ui.playerPosition);
 		
 		ui.editor = new editor();
+		ui.editor.properties = new properties();
 		
 		//var log_ui = { width: 250, alignX: "left", alignY: "top", data: "" };
 		//ui.makeDialog("log",log_ui);
