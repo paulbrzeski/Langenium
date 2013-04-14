@@ -21,4 +21,21 @@
 .ui-menu .ui-menu-item a {
 	min-width: 100px;
 }
-
+#transform .controls > h3 { 
+	margin: 0.25em 0 0 0;
+}
+#transform .controls > h4 { 
+	display: inline-block;
+	float: left;
+	clear: left;
+}
+#transform .controls > input {
+	height: 12px;
+	margin: 0.75em 0 0 0.5em;
+	width: 7em;
+	text-align: center;
+	float: left;
+}
+#transform .controls > .slider-control {
+	width:70%; float:left; margin:15px;
+}

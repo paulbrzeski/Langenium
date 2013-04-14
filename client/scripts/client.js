@@ -131,7 +131,7 @@ function createScene() {
 	
 	effects.water.update();
 	
-	cloudEffect({x: -240000, y: 50000, z: -240000});
+	cloudEffect({x: -240000, y: 60000, z: -240000});
 		
 	hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
 	hemiLight.name = "light1";
@@ -140,11 +140,15 @@ function createScene() {
 	hemiLight.position.set( 0, M, 0 );
 	scene.add( hemiLight );
 	if (window.location.href.indexOf("editor") > 0) {
+		controls.noRotate = true;
 		ui.makeDialog("editor_tools", ui.editor.makeControls());
 		$("#editor_tools .button").button();
 		$("#editor_tools .menu").menu();
 		
 		ui.makeDialog("properties", ui.editor.properties.makeControls());
+		ui.makeDialog("transform", ui.editor.transform.makeControls());
+		ui.editor.transform.refresh();
+		
 	}
 }	
 
@@ -238,7 +242,6 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
  
 	renderer.setSize( winW, winH );
-		//console.log(window.innerWidth);
 }
 
 function updateWinSizeVariables(){

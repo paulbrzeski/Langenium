@@ -46,10 +46,10 @@ editor.prototype.makeControls = function () {
 		html.data += "<h3>Tools</h3>";
 		html.data += "<ul class='menu'>";
 		
-		html.data += "<li><a href='#'>Environmental Objects</a><ul>";
+		html.data += "<li><a href='#'>Scene Objects</a><ul>";
 		for (var i in scene.__objects) {
 
-			html.data += "<li><a href='#' onclick='ui.editor.properties.loadProperties("+i+")'>" + scene.__objects[i].name + " (" + i+ ")</a></li>";
+			html.data += "<li><a href='#' onclick='ui.editor.properties.loadProperties("+i+")'>" + scene.__objects[i].name + " (" + scene.__objects[i].id + ")</a></li>";
 		}
 		html.data += "</ul></li>";
 		

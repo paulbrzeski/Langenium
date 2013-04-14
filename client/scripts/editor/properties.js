@@ -13,7 +13,7 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 var properties = function() {
-   
+   this.mouseover = false;
    return this;
 };
 
@@ -25,12 +25,12 @@ var properties = function() {
 // Events
 
 $("#properties").live("mouseover",function(e){
+	ui.editor.transform.mouseover = true;
 	controls.enabled = false;
-	console.log("disabled");
 });
 $("#properties").live("mouseout",function(e){
+	ui.editor.transform.mouseover = false;
 	controls.enabled = true;
-	console.log("enabled");
 });
 
 // Helpers
@@ -45,7 +45,7 @@ properties.prototype.getPropertyList = function(id) {
 	html += "<ul class='menu'>";
 	for (var i in scene.__objects[id]) {
 		var val = scene.__objects[id][i];
-		if ((typeof(val) != "object")&&(typeof(val) != "function")) {
+		if ((typeof(val) != "object")&&(typeof(val) != "function")) { 
 			html += "<li><a href='#'>" + i + ": " + val +"</a></li>";
 		}
 		else {
@@ -74,30 +74,47 @@ properties.prototype.getPropertyList = function(id) {
 };
 
 properties.prototype.onClick = function ( event ) {
+	if ((ui.editor.transform.mouseover == false)&&(ui.editor.transform.mouseover == false)) {
+		var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+		projector.unprojectVector( vector, camera );
+		var camera_pos = new THREE.Vector3().getPositionFromMatrix(camera.matrixWorld);
+		var raycaster = new THREE.Raycaster( camera_pos, vector.sub( camera_pos ).normalize() );
 
+		var intersects = raycaster.intersectObjects( scene.__objects );
 
-
-				var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
-				projector.unprojectVector( vector, camera );
-
-				var raycaster = new THREE.Raycaster( camera.matrixWorld.getPosition(), vector.sub( camera.matrixWorld.getPosition() ).normalize() );
-
-				var intersects = raycaster.intersectObjects( scene.__objects );
-
-				if ( intersects.length > 0 ) {
-					ui.editor.properties.loadProperties(intersects[0].object.id);
-					
-				}
-
-	};
+		if ( intersects.length > 0 ) {
+			ui.editor.properties.loadProperties(intersects[0].object.id);
+			ui.editor.transform.loadProperties(intersects[0].object.id);
+		}
+	}
+};
 
 
 properties.prototype.loadProperties = function(id) {
 	// clears and populates the properties window
 	for (var i in scene.__objects) {
-			if (scene.__objects[i].id == id) {
-				$("#properties").html(this.getPropertyList(i));
-				$("#properties .menu").menu();
+		if (scene.__objects[i].id == id) {
+			$("#properties").html(this.getPropertyList(i));
+			$("#properties .menu").menu();
+			if (scene.__objects[i].material.materials) {
+				scene.__objects[i].material.materials.forEach(function(material){
+					material.wireframe = true;
+				});
+			}
+			else {
+				scene.__objects[i].material.wireframe = true;
 			}
 		}
+		else {
+			if (scene.__objects[i].material.materials) {
+				scene.__objects[i].material.materials.forEach(function(material){
+					material.wireframe = false;
+				});
+			}
+			else {
+				scene.__objects[i].material.wireframe = false;
+			}
+		}
+
+	}
 };

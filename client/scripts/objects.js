@@ -41,7 +41,7 @@ objects.prototype.loadObject = function (instruction) {
 		type = instruction["class"],
 		o = this;
 	
-	if (cacheIndex >= 0) {
+	if ((cacheIndex >= 0)&&(window.location.href.indexOf("editor") <= 0)) {
 		var cachedObject = o.cache[cacheIndex];
 		mesh = o.makeObjectMesh(type, cachedObject.geometry, cachedObject.materials, x, y, z , scale);
 		o.renderObject(mesh, type, instruction);

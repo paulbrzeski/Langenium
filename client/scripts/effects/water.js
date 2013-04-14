@@ -160,7 +160,6 @@ water.prototype.update = function() {
 		}
 	 }
 
-	console.log(tile_array.length);
 	tile_array.forEach(function(tile){
 		water.push(tile);
 		scene.add(water[water.length-1]);
