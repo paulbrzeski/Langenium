@@ -147,7 +147,7 @@ function createScene() {
 		
 		ui.makeDialog("properties", ui.editor.properties.makeControls());
 		ui.makeDialog("transform", ui.editor.transform.makeControls());
-		ui.editor.transform.refresh();
+		ui.editor.transform.render();
 		
 	}
 }	
@@ -177,8 +177,8 @@ function animate() {
 		
 		for (var i = 0; i < water[0].geometry.vertices.length; i++) {
 			var n = Math.sin( i / 5 + ( myTime + i ) /  7);
-			water[0].geometry.vertices[i].z += 11.654321 * n;
-			water[0].geometry.vertices[i].y = 444.654321 * n;
+			water[0].geometry.vertices[i].z += 5.654321 * n;
+			water[0].geometry.vertices[i].y = 222.654321 * n;
 		}
 		water[0].geometry.verticesNeedUpdate = true;
 	}

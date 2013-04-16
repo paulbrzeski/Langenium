@@ -84,7 +84,10 @@ properties.prototype.onClick = function ( event ) {
 
 		if ( intersects.length > 0 ) {
 			ui.editor.properties.loadProperties(intersects[0].object.id);
+			$("#transform").html(ui.editor.transform.makeControls().data);
+			ui.editor.transform.render();
 			ui.editor.transform.loadProperties(intersects[0].object.id);
+			// ui.editor.transform.refresh(); once scaling is implemented in transform.js, this can be uncommented
 		}
 	}
 };

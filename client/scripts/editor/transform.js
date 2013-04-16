@@ -55,47 +55,50 @@ transform.prototype.makeControls = function () {
 
 transform.prototype.loadProperties = function(id) {
 	// clears and populates the transform window
-	var object, obj_index;
+	var object, obj_index, scale = M / 2;
 	for (var i in scene.__objects) {
 		if (scene.__objects[i].id == id) {
 			object = scene.__objects[i];
 			obj_index = i;
 		}
 	};
-	$("#transform .controls .position.x.textbox").val(object.position.x).live('input',function(){ scene.__objects[obj_index].position.x =  $("#transform .controls .position.x.textbox").val(); } );
-	$("#transform .controls .position.y.textbox").val(object.position.y).live('input',function(){ scene.__objects[obj_index].position.y =  $("#transform .controls .position.y.textbox").val(); } );
-	$("#transform .controls .position.z.textbox").val(object.position.z).live('input',function(){ scene.__objects[obj_index].position.z =  $("#transform .controls .position.z.textbox").val(); } );
+	$("#transform .controls .position.x.textbox").val(object.position.x).change(function(){ scene.__objects[obj_index].position.x =  $("#transform .controls .position.x.textbox").val(); } );
+	$("#transform .controls .position.y.textbox").val(object.position.y).change(function(){ scene.__objects[obj_index].position.y =  $("#transform .controls .position.y.textbox").val(); } );
+	$("#transform .controls .position.z.textbox").val(object.position.z).change(function(){ scene.__objects[obj_index].position.z =  $("#transform .controls .position.z.textbox").val(); } );
 	
-	$("#transform .controls .position.x.slider-control").slider( { value: object.position.x, slide: function( event, slider) {  scene.__objects[obj_index].position.x = slider.value; } } );
-	$("#transform .controls .position.y.slider-control").slider( { value: object.position.y, slide: function( event, slider) {  scene.__objects[obj_index].position.y = slider.value; } } );
-	$("#transform .controls .position.z.slider-control").slider( { value: object.position.z, slide: function( event, slider) {  scene.__objects[obj_index].position.z = slider.value; } } );
+	$("#transform .controls .position.x.slider-control").slider( { value: object.position.x, min: object.position.x - scale, max: object.position.x + scale, slide: function( event, slider) {  scene.__objects[obj_index].position.x = slider.value; $("#transform .controls .position.x.textbox").val(slider.value); } } );
+	$("#transform .controls .position.y.slider-control").slider( { value: object.position.y, min: object.position.y - scale, max: object.position.y + scale, slide: function( event, slider) {  scene.__objects[obj_index].position.y = slider.value; $("#transform .controls .position.y.textbox").val(slider.value); } } );
+	$("#transform .controls .position.z.slider-control").slider( { value: object.position.z, min: object.position.z - scale, max: object.position.z + scale, slide: function( event, slider) {  scene.__objects[obj_index].position.z = slider.value; $("#transform .controls .position.z.textbox").val(slider.value); } } );
 	
-	$("#transform .controls .rotation.x.textbox").val(object.rotation.x).live('input',function(){ scene.__objects[obj_index].rotation.x =  $("#transform .controls .rotation.x.textbox").val(); } );
-	$("#transform .controls .rotation.y.textbox").val(object.rotation.y).live('input',function(){ scene.__objects[obj_index].rotation.y =  $("#transform .controls .rotation.y.textbox").val(); } );
-	$("#transform .controls .rotation.z.textbox").val(object.rotation.z).live('input',function(){ scene.__objects[obj_index].rotation.z =  $("#transform .controls .rotation.z.textbox").val(); } );
+	$("#transform .controls .rotation.x.textbox").val(object.rotation.x).change(function(){ scene.__objects[obj_index].rotation.x =  $("#transform .controls .rotation.x.textbox").val(); } );
+	$("#transform .controls .rotation.y.textbox").val(object.rotation.y).change(function(){ scene.__objects[obj_index].rotation.y =  $("#transform .controls .rotation.y.textbox").val(); } );
+	$("#transform .controls .rotation.z.textbox").val(object.rotation.z).change(function(){ scene.__objects[obj_index].rotation.z =  $("#transform .controls .rotation.z.textbox").val(); } );
 	
-	$("#transform .controls .rotation.x.slider-control").slider( { value: object.rotation.x, slide: function( event, slider) {  scene.__objects[obj_index].rotation.x = slider.value; } } );
-	$("#transform .controls .rotation.y.slider-control").slider( { value: object.rotation.y, slide: function( event, slider) {  scene.__objects[obj_index].rotation.y = slider.value; } } );
-	$("#transform .controls .rotation.z.slider-control").slider( { value: object.rotation.z, slide: function( event, slider) {  scene.__objects[obj_index].rotation.z = slider.value; } } );
+	$("#transform .controls .rotation.x.slider-control").slider( { value: object.rotation.x, step: .1, min: object.rotation.x - scale, max: object.rotation.x + scale, slide: function( event, slider) {  scene.__objects[obj_index].rotation.x = slider.value; $("#transform .controls .rotation.x.textbox").val(slider.value); } } );
+	$("#transform .controls .rotation.y.slider-control").slider( { value: object.rotation.y, step: .1, min: object.rotation.y - scale, max: object.rotation.y + scale, slide: function( event, slider) {  scene.__objects[obj_index].rotation.y = slider.value; $("#transform .controls .rotation.y.textbox").val(slider.value); } } );
+	$("#transform .controls .rotation.z.slider-control").slider( { value: object.rotation.z, step: .1, min: object.rotation.z - scale, max: object.rotation.z + scale, slide: function( event, slider) {  scene.__objects[obj_index].rotation.z = slider.value; $("#transform .controls .rotation.z.textbox").val(slider.value); } } );
 	
-	$("#transform .controls .scale.textbox").val(object.scale.x).live('input',function(){ 
+	$("#transform .controls .scale.textbox").val(object.scale.x).change(function(){ 
 			scene.__objects[obj_index].scale.x = $("#transform .controls .scale.textbox").val();
 			scene.__objects[obj_index].scale.y = $("#transform .controls .scale.textbox").val();
 			scene.__objects[obj_index].scale.z = $("#transform .controls .scale.textbox").val();
 	} );
 	
-	$("#transform .controls .scale.slider-control").slider( { value: object.scale.x, slide: function( event, slider) {  scene.__objects[obj_index].scale.x = slider.value; scene.__objects[obj_index].scale.y = slider.value; scene.__objects[obj_index].scale.z = slider.value; } } );
+	$("#transform .controls .scale.slider-control").slider( { value: object.scale.x, min: object.scale.x - scale, max: object.scale.x + scale, slide: function( event, slider) {  
+		scene.__objects[obj_index].scale.x = slider.value; scene.__objects[obj_index].scale.y = slider.value; scene.__objects[obj_index].scale.z = slider.value; 
+		$("#transform .controls .scale.textbox").val(slider.value);
+	} } );
 };
 
-
-transform.prototype.refresh = function() {
-	var scale = M / 8;
+transform.prototype.render = function() {
+	// need to update this to scale
+	var scale = M / 2;
 	$( "#transform  .position.slider-control" ).each(function() {
 		 var value = parseInt( $( this ).text(), 10 );
 		 $( this ).empty().slider({
 			value: value,
-			min: -scale,
-			max: scale,
+			min: value - scale,
+			max: value + scale,
 			animate: true
 		});
 	});
