@@ -47,6 +47,10 @@ players.prototype.playerInput = function (delta){
 			keyboardInput.pY = -1;																// <--------- these rules will need to go to the server
 		}
 	}
+	if (keyboard.pressed("esc")){
+		if (window.location.href.indexOf("editor") > 0) {
+		}
+	}
 	if (isFiring == true) {
 		move = true;
 	}
