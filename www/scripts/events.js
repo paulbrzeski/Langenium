@@ -26,7 +26,7 @@ var events = function() {
 events.prototype.getUrl = function () {
 	if (window.location.href.indexOf("langenium") > 0)
 	{
-		return "http://server.langenium.com";
+		return "http://langenium.com";
 		
 	}
 	else {

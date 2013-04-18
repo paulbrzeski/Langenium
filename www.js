@@ -28,6 +28,14 @@ var  path = require("path"),
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 function route(request, response) {
+		if ((request.url == "/")||(request.url == "")) {
+			var 	path = __dirname + "/www/templates/index.jade",
+					template = fs.readFileSync(path, "utf8"),
+					options = { filename: path },
+					fn = jade.compile(template, options),
+					html = fn();
+			response.end(html);
+		}
 		if ((request.url == "/play/")||(request.url == "/play")) {
 			var 	path = __dirname + "/www/templates/play.jade",
 					template = fs.readFileSync(path, "utf8"),
