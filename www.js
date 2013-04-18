@@ -1,75 +1,77 @@
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	LANGENIUM SERVER 
+	WWW
+	This class contains functions that serve the website and game client files
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	Globals
+	Exports Functions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-// Modules
-var 	app = require('http').createServer(function (request, response) { 
-			www.route(request, response);
-		}),
-		db = require("./db.js"),
-		io = require('socket.io').listen(app),
-		fs = require('fs'),
-		events = require('./events.js'),
-		instance = require('./instance.js'),
-		www = require('./www.js');
-	
-// Variables
+module.exports.route = route;
 
-
-	
-var 	instances = {},
-		client_sessions = [];
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	Startup
+	Global Variables
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-makeUniverse();  
-app.listen(80);
 
+var  path = require("path"),
+		fs = require("fs"),
+		url = require('url'),
+		jade = require("jade"),
+		mime = require("mime");
+		
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-io.set('log level', 2); // supresses the console output
-io.sockets.on('connection', function (socket) {
 
-	// Ping and Pong
-	socket.emit("ping", { time: new Date().getTime(), latency: 0 }); 
-	socket.on("pong", function(data){ events.pong(socket, data); });
-
-	// Player
-	socket.on("login", function(data){ events.login(socket, data, db, instances, client_sessions); });
-	socket.on("disconnect" , function ()  { events.logout(socket, db, instances, client_sessions); });
-	socket.on("move",function(data){ });
-});
-
-function makeUniverse() {
-/*
-	Sets up the main map
-*/
-	// Create container and first object 
-	instances.master = instance.make("container", false);
-	instances.master.instances.push(
-		instance.make("world", false)
-	);
-	
-	// Check the database for any objects that belong to this instance and add them
-	var objects = function(result) { 
-		result.forEach(function(object){
-			instances.master.addObjectToContainer(object, instances.master);
-		}); 
-	};
-	
-	db.get("instance_objects", { instance_id: "master" }, objects);
+function route(request, response) {
+		if ((request.url == "/play/")||(request.url == "/play")) {
+			var 	path = __dirname + "/www/templates/play.jade",
+					template = fs.readFileSync(path, "utf8"),
+					options = { filename: path },
+					fn = jade.compile(template, options),
+					html = fn();
+			response.end(html);
+		}
+		else {
+			getFile(request, response, url);
+		}
 
 }
 
 
+function getFile(request, response) {
+	var 	uri = url.parse(request.url).pathname,
+			filename = path.resolve(path.join(process.cwd(), "/www/",uri));
+
+	
+	fs.exists(filename, function(exists) {
+		if(!exists) {
+			response.writeHead(404, {"Content-Type": "text/plain"});
+			response.write("404 Not Found\n");
+			response.end();
+			return;
+		}
+	 
+	   fs.readFile(filename, "binary", function (err, file) {
+			if (err) {
+				response.writeHead(500, {
+					"Content-Type": "text/plain"
+				});
+				response.write(err + "\n");
+				response.end();
+				return;
+			}
+
+			var type = mime.lookup(filename);
+			response.writeHead(200, {
+				"Content-Type": type
+			});
+			response.write(file, "binary");
+			response.end();
+		});
+	});
+}
