@@ -23,9 +23,6 @@ var 	app = require('http').createServer(function (request, response) {
 		www = require('./www.js');
 	
 // Variables
-
-
-	
 var 	instances = {},
 		client_sessions = [];
 
@@ -40,7 +37,6 @@ app.listen(80);
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 io.set('log level', 2); // supresses the console output
 io.sockets.on('connection', function (socket) {
-
 	// Ping and Pong
 	socket.emit("ping", { time: new Date().getTime(), latency: 0 }); 
 	socket.on("pong", function(data){ events.pong(socket, data); });

@@ -28,28 +28,32 @@ var  path = require("path"),
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 function route(request, response) {
-		if ((request.url == "/")||(request.url == "")) {
-			var 	path = __dirname + "/www/templates/index.jade",
-					template = fs.readFileSync(path, "utf8"),
-					options = { filename: path },
-					fn = jade.compile(template, options),
-					html = fn();
-			response.end(html);
-		}
-		if ((request.url == "/play/")||(request.url == "/play")) {
-			var 	path = __dirname + "/www/templates/play.jade",
-					template = fs.readFileSync(path, "utf8"),
-					options = { filename: path },
-					fn = jade.compile(template, options),
-					html = fn();
-			response.end(html);
+	if ((request.url == "")||(request.url == "/")) {
+		response.end(getTemplate( "index.jade", { page: 'pages/home' } ));
+	}
+	if (	(request.url =="/about/")||
+			(request.url == "/gallery/")||
+			(request.url == "/community/")) {
+			response.end(getTemplate( "index.jade", { page: 'pages' + request.url } ));
+	}
+	else {
+		if ((request.url == "/play/")||(request.url == "/play")) { 
+			response.end(getTemplate("play.jade",{}));
 		}
 		else {
 			getFile(request, response, url);
 		}
+	}
 
 }
 
+function getTemplate(layout, locals) {
+	var 	path = __dirname + "/www/templates/" + layout,
+			template = fs.readFileSync(path, "utf8"),
+			options = { filename: path, pretty: true },
+			fn = jade.compile(template, options);
+			return fn(locals);
+}
 
 function getFile(request, response) {
 	var 	uri = url.parse(request.url).pathname,
