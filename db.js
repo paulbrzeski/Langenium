@@ -18,7 +18,7 @@ module.exports.get = get;
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 	var 		db_user = process.env['DB_USERNAME'],
 				db_pass = process.env['DB_PASSWORD'],
-				db_url = db_user+':'+db_pass+'@server.langenium.com:27017/dev',
+				db_url = db_user+':'+db_pass+'@langenium.com:27017/dev',
 				Mongolian  = require("mongolian"),
 				server = new Mongolian(db_url);
 
