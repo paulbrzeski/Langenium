@@ -1,5 +1,18 @@
 head
 		title Langenium 
-		include ../styles/website.css
+		include ../styles/layout.css
+		include ../styles/menu.css
+		include ../styles/styles.css
 		include ../styles/blueprint/screen.css
 		include ../styles/jquery-ui-1.10.2.custom.css
+		link(href='http://fonts.googleapis.com/css?family=Aldrich', rel='stylesheet', type='text/javascript')
+		if (page == 'pages/home')
+			include  ../styles/pages/home.css
+		if (page == 'pages/about/')
+			include  ../styles/pages/about.css
+		if (page == 'pages/gallery/')
+			include  ../styles/pages/gallery.css
+		if (page == 'pages/guide/')
+			include  ../styles/pages/guide.css
+		if (page == 'pages/community/')
+			include  ../styles/pages/community.css

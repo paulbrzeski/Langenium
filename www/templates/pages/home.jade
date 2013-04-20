@@ -1,27 +1,66 @@
-#slideshow.span-15 
-	h2.hidden Slideshow
-	ul
-		li
-			h3 Welcome to Langenium
-			p A game bla bla bla
-		li
-			h3 Game trailer
-			p A game bla bla bla
-		li
-			h3 Game trailer
-			p A game bla bla bla
-		li
-			h3 Game trailer
-			p A game bla bla bla
-#play.span-7.last 
-	h2.hidden Play
-	h3 PLAY LANGENIUM
-	p	You can play Langenium by connecting with either OpenID or Facebook. 
-	p	Once you select a method, choose your game mode to login.
-#news.span-15 
-	h2.hidden News
-	ul
-		li
-			h3
-#game_guide.span-7.last 
-	h3 Game guide
+.row
+	.round-box.last
+		.span-14.last
+			#slideshow.round-box
+				h2.hidden Slideshow
+				ul
+					li
+						.text.left
+							h3 Welcome to Langenium
+							p A game bla bla bla
+					li
+						.text.right
+							h3 Game trailer
+							p A game bla bla bla
+					li
+						.text.left
+							h3 Game trailer
+							p A game bla bla bla
+					li
+						.text.right
+							h3 Game trailer
+							p A game bla bla bla
+	.round-box.last
+		.span-6.last 
+			#play
+				h2.hidden Play
+				h3 PLAY LANGENIUM
+				p	You can play Langenium by connecting with either OpenID or Facebook. 
+				p	Once you select a method, choose your game mode to login.
+				a(href='/play').button PLAY
+.row
+	.round-box.last
+			#news.span-14.last
+				h2.hidden News
+				ul
+					li
+						h3 New 3D models, 
+							span.small 14 April 2013
+						p
+							| I've instroduced new 3D models into the game and I ca'nt be Duis aute irure dolor in reprehenderit 
+							| voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+						a(href='#') Read more
+					li
+						h3 New Editor,
+							span.small 14 April 2013
+						p
+							| I've instroduced new 3D models into the game and I ca'nt be Duis aute irure dolor in reprehenderit 
+							| voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+						a(href='#') Read more
+						
+	.round-box.last
+		#game_guide.span-6.last
+			h3 Game guide
+			ul
+				li
+					a(href='#') How to play
+				li
+					a(href='#') Story
+				li
+					a(href='#') Locations
+				li
+					a(href='#') Factions
+				li
+					a(href='#') Ships
+				li
+					a(href='#') Enemies

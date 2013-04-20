@@ -33,8 +33,10 @@ function route(request, response) {
 	}
 	if (	(request.url =="/about/")||
 			(request.url == "/gallery/")||
+			(request.url == "/guide/")||
 			(request.url == "/community/")) {
-			response.end(getTemplate( "index.jade", { page: 'pages' + request.url } ));
+			var page_text = pretendDatabaseResult();
+			response.end(getTemplate( "index.jade", { page: 'pages' + request.url , variable: page_text } ));
 	}
 	else {
 		if ((request.url == "/play/")||(request.url == "/play")) { 
@@ -45,6 +47,9 @@ function route(request, response) {
 		}
 	}
 
+}
+function pretendDatabaseResult() {
+	return "Some text";
 }
 
 function getTemplate(layout, locals) {

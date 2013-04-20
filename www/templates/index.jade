@@ -3,14 +3,19 @@ html(lang="en")
 	include header
 	body
 		.container
-			#header.span-24.last
-				h1.span-11 Langenium
-				include menu
+			.round-box
+				#header.span-22.last
+					h1.span-9
+						a(href='/') 
+							span.hidden Langenium
+					include menu
 			if (page == 'pages/home')
 				include pages/home
 			if (page == 'pages/about/')
 				include pages/about
 			if (page == 'pages/gallery/')
 				include pages/gallery
+			if (page == 'pages/guide/')
+				include pages/guide
 			if (page == 'pages/community/')
 				include pages/community
