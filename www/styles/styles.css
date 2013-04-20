@@ -33,7 +33,7 @@ a {
 	text-decoration: none;
 }
 .row {
-	margin: 0 0 0 .25em;
+	margin: 0;
 }
 .row a {
 	color: #FFFF00;
@@ -72,6 +72,18 @@ a {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1a1a', endColorstr='#000000',GradientType=0 ); /* IE6-8 */
 
 }
+/*
+		Header 
+*/
+h1 a {
+	background: url(../assets/logo-01.png) no-repeat top left;
+	display: block;
+	width: 271px;
+	height: 75px;
+	margin: 0 0 0 .25em;
+}
+
+
 .round-box > div#header {
 	padding: .25em 0;
 	background: #1a1a1a; /* Old browsers */
@@ -85,14 +97,3 @@ a {
 	background: linear-gradient(to bottom,  #1a1a1a 48%,#000000 60%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1a1a', endColorstr='#000000',GradientType=0 ); /* IE6-8 */
 }
-/*
-		Header 
-*/
-h1 a {
-	background: url(../assets/logo-01.png) no-repeat top left;
-	display: block;
-	width: 271px;
-	height: 75px;
-	margin: 0 0 0 .25em;
-}
-
