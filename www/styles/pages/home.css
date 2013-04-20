@@ -6,7 +6,6 @@
 
 #slideshow {
 	border-color: #1A1A1A;
-	
 	width: 101%;
 	height: 335px;
 	margin: .5em -.75em 0 -.75em;
@@ -79,25 +78,35 @@
 }
 
 /* News */
-#news ul {
-	margin: .5em 0 0 -.25em;
+#news {
+	border-radius:  10px;
 	border:  solid 5px #111111;
+	border-color: #1A1A1A;
+	width: 101%;
+	height: 655px;
+	margin: -1em -.75em .5em -.75em;
+}
+#news ul {
+
+	
 	border-color: #1a1a1a;
 	overflow: hidden;
-	width: 99%;
-	height: 320px;
+	height: 640px;
 
 	border-radius:  10px;
 	background-color:  #000000;
 	display:  block;
+	
+	
 }
 
 #news ul li {
-	border-width:  1px;
-	border-color:  #333333;
-	border-style: dashed none;
-	font-family: monospace;
-	margin:  1em;
+
+	border-bottom: dashed 1px #333333;
+
+	margin:  0 .75em;
 	padding:  1em 1em 2em 1em;
 }
-
+#news ul li p {
+	color: #666666;
+}
