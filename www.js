@@ -11,23 +11,30 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 module.exports.route = route;
+module.exports.getFile = getFile;
 
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Global Variables
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-var  path = require("path"),
+var		path = require("path"),
 		fs = require("fs"),
 		url = require('url'),
 		jade = require("jade"),
-		mime = require("mime");
+		mime = require("mime"),
+		static = require("node-static"),
+		file = new(static.Server)('./www', {
+			cache: 600,
+			headers: {}
+		});
 		
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 function route(request, response) {
+	response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
 	if ((request.url == "")||(request.url == "/")) {
 		response.end(getTemplate( "index.jade", { page: 'pages/home' } ));
 	}
@@ -41,9 +48,6 @@ function route(request, response) {
 	else {
 		if ((request.url == "/play/")||(request.url == "/play")) { 
 			response.end(getTemplate("play.jade",{}));
-		}
-		else {
-			getFile(request, response, url);
 		}
 	}
 
@@ -62,32 +66,33 @@ function getTemplate(layout, locals) {
 
 function getFile(request, response) {
 	var 	uri = url.parse(request.url).pathname,
-			filename = path.resolve(path.join(process.cwd(), "/www/",uri));
-
-	fs.exists(filename, function(exists) {
-		if(!exists) {
-			response.writeHead(404, {"Content-Type": "text/plain"});
-			response.write("404 Not Found\n");
-			response.end();
-			return;
-		}
-	 
-	   fs.readFile(filename, "binary", function (err, file) {
+			filename = path.resolve(path.join(process.cwd(), "/www/",uri)),
+			type = mime.lookup(filename),
+			body = '';
+    
+    // Append the chunk to body
+    request.addListener('data', function (chunk) { 
+      body += chunk; 
+    });
+	request.addListener('end', function () {
+	
+		file.serve(request, response, function(err, result) {
 			if (err) {
-				response.writeHead(500, {
-					"Content-Type": "text/plain"
-				});
-				response.write(err + "\n");
-				response.end();
-				return;
+				console.error('Error serving %s - %s', request.url, err.message);
+				if (err.status === 404 || err.status === 500) {
+					file.serveFile(util.format('/%d.html', err.status), err.status, {}, request, response);
+				}
+				else {
+					response.writeHead(err.status, err.headers);
+					response.end();
+				}
 			}
-
-			var type = mime.lookup(filename);
-			response.writeHead(200, {
-				"Content-Type": type
-			});
-			response.write(file, "binary");
-			response.end();
+			else {
+				response.writeHead(200, {
+					"Content-Type": type + "; charset=utf-8"
+				});
+				response.end(body, 'utf-8');
+			}
 		});
 	});
 }
