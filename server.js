@@ -19,6 +19,10 @@ var 	static = require("node-static"),
 			www.route(request, response);
 		}),
 		fileServer = http.createServer(function (request, response) { 
+			var body = '';
+			request.addListener('data', function (chunk) {
+				body += chunk;
+			});
 			request.addListener('end', function () {
 				//
 				// Serve files!
@@ -29,6 +33,8 @@ var 	static = require("node-static"),
 						response.writeHead(err.status, err.headers);
 						response.end();
 					} else { // The file was served successfully
+						response.writeHead(res.status, res.headers);
+						response.end(body);
 						console.log("> " + request.url + " - " + res.message);
 					}
 				});
