@@ -112,3 +112,9 @@
  --> IP: 127.0.0.1
 [- END ATTACK DETAILS -]
 
+[- ATTACK DETAILS FOR function now() { [native code] } -]
+ --> Detective: 404
+ --> Request: GET /
+ --> IP: 127.0.0.1
+[- END ATTACK DETAILS -]
+

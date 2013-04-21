@@ -26,16 +26,16 @@ var 	// Libs
 		website = require('./routes/website.js'),
 		game = require('./routes/game.js'),
 		connect = require('connect');
-		
 app.use(fusker.express.check);
 
 fusker.config.dir = __dirname + "/public";
 fusker.config.banLength = 1;
-fusker.config.silent = true;
+fusker.config.verbose = true;
 
 fusker.http.detectives.push('csrf', 'xss', 'sqli', 'lfi', '404');
-
+fusker.http.payloads.push();
 fusker.socket.detectives.push('xss', 'sqli', 'lfi');
+fusker.socket.payloads.push();
 
 // Variables
 var 	instances = {},
@@ -51,7 +51,7 @@ app.configure(function(){
 	app.set('view engine', 'jade');
 	app.use(connect.favicon("public/favicon.ico"));
 	app.use(app.router);
-	app.use(connect.logger('dev'));
+	app.use(express.logger('dev'));
 	app.use(connect.static(fusker.config.dir));	
 });
 
