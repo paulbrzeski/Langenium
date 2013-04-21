@@ -12,13 +12,27 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 // Modules
-var 	http = require('http'),
+var 	static = require("node-static"),
+		file = new(static.Server)('./www'),
+		http = require('http'),
 		app = http.createServer(function (request, response) { 
 			www.route(request, response);
 		}),
 		fileServer = http.createServer(function (request, response) { 
-			www.getFile(request, response);
-			
+			request.addListener('end', function () {
+				//
+				// Serve files!
+				//
+				file.serve(request, response, function (err, res) {
+					if (err) { // An error as occured
+						console.error("> Error serving " + request.url + " - " + err.message);
+						response.writeHead(err.status, err.headers);
+						response.end();
+					} else { // The file was served successfully
+						console.log("> " + request.url + " - " + res.message);
+					}
+				});
+			});
 		}),
 		db = require("./db.js"),
 		io = require('socket.io').listen(app),
