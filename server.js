@@ -11,18 +11,31 @@
 	Globals
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-// Modules
-var 	express = require('express'),
+
+var 	// Libs
+		express = require('express'),
 		app = express(),
 		server = require('http').createServer(app),
+		fusker = require('fusker')
+		io = fusker.socket.listen(server),
+		// Modules
 		db = require("./db.js"),
-		io = require('socket.io').listen(server),
 		events = require('./events.js'),
 		instance = require('./instance.js'),
 		//Routes
 		website = require('./routes/website.js'),
 		game = require('./routes/game.js'),
 		connect = require('connect');
+		
+app.use(fusker.express.check);
+
+fusker.config.dir = __dirname + "/public";
+fusker.config.banLength = 1;
+fusker.config.silent = true;
+
+fusker.http.detectives.push('csrf', 'xss', 'sqli', 'lfi', '404');
+
+fusker.socket.detectives.push('xss', 'sqli', 'lfi');
 
 // Variables
 var 	instances = {},
@@ -36,11 +49,10 @@ app.configure(function(){
 	app.use(connect.compress());
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
-	app.use(express.responseTime());
-	app.use(express.bodyParser());
+	app.use(connect.favicon("public/favicon.ico"));
 	app.use(app.router);
-	app.use(express.logger('dev'));
-	app.use(connect.static(__dirname + '/public'));	
+	app.use(connect.logger('dev'));
+	app.use(connect.static(fusker.config.dir));	
 });
 
 // Route bindings
@@ -54,7 +66,12 @@ app.get('/play', game.play);
 
 
 server.listen(80);
-
+process.on('SIGINT', function() {
+  server.close();
+  // calling .shutdown allows your process to exit normally
+  toobusy.shutdown();
+  process.exit();
+});
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
