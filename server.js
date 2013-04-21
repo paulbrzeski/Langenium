@@ -37,7 +37,7 @@ var 	instances = {},
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 makeUniverse();  
 app.configure(function(){
-	app.set('views', __dirname + '/views');io = require('socket.io').listen(server),
+	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
 	app.use(connect.favicon("public/favicon.ico"));
 	app.use(app.router);
