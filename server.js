@@ -12,41 +12,18 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 // Modules
-var 	static = require("node-static"),
-		file = new(static.Server)('./www'),
-		http = require('http'),
-		app = http.createServer(function (request, response) { 
-			www.route(request, response);
-		}),
-		fileServer = http.createServer(function (request, response) { 
-			var body = '';
-			request.addListener('data', function (chunk) {
-				body += chunk;
-			});
-			request.addListener('end', function () {
-				//
-				// Serve files!
-				//
-				file.serve(request, response, function (err, res) {
-					if (err) { // An error as occured
-						console.error("> Error serving " + request.url + " - " + err.message);
-						response.writeHead(err.status, err.headers);
-						response.end();
-					} else { // The file was served successfully
-						response.writeHead(res.status, res.headers);
-						response.end(body);
-						console.log("> " + request.url + " - " + res.message);
-					}
-				});
-			});
-		}),
+var 	express = require('express'),
+		app = express(),
+		server = require('http').createServer(app),
 		db = require("./db.js"),
-		io = require('socket.io').listen(app),
-		fs = require('fs'),
+		io = require('socket.io').listen(server),
 		events = require('./events.js'),
 		instance = require('./instance.js'),
-		www = require('./www.js');
-	
+		//Routes
+		website = require('./routes/website.js'),
+		game = require('./routes/game.js'),
+		connect = require('connect');
+
 // Variables
 var 	instances = {},
 		client_sessions = [];
@@ -55,8 +32,29 @@ var 	instances = {},
 	Startup
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 makeUniverse();  
-app.listen(80);
-fileServer.listen(8080);
+app.configure(function(){
+	app.use(connect.compress());
+	app.set('views', __dirname + '/views');
+	app.set('view engine', 'jade');
+	app.use(express.responseTime());
+	app.use(express.bodyParser());
+	app.use(app.router);
+	app.use(express.logger('dev'));
+	app.use(connect.static(__dirname + '/public'));	
+});
+
+// Route bindings
+app.get('/', website.index);
+app.get('/about', website.about);
+app.get('/gallery', website.gallery);
+app.get('/guide', website.guide);
+app.get('/community', website.community);
+
+app.get('/play', game.play);
+
+
+server.listen(80);
+
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
