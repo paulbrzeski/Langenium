@@ -27,3 +27,7 @@ exports.community = function(req, res) {
 	res.setHeader("Cache-Control", "must-revalidate, private");
 	res.render('index', { page: 'pages/community' });
 };
+exports.redirect = function(req, res) {
+	res.writeHead(302, { 'Location': 'http://127.0.0.1/'  });
+	res.end();
+};

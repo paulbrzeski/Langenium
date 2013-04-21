@@ -13,29 +13,20 @@
 
 
 var 	// Libs
+		connect = require('connect'),
 		express = require('express'),
 		app = express(),
 		server = require('http').createServer(app),
-		fusker = require('fusker')
-		io = fusker.socket.listen(server),
+		io = require('socket.io').listen(server),
 		// Modules
 		db = require("./db.js"),
 		events = require('./events.js'),
 		instance = require('./instance.js'),
 		//Routes
 		website = require('./routes/website.js'),
-		game = require('./routes/game.js'),
-		connect = require('connect');
-app.use(fusker.express.check);
+		game = require('./routes/game.js');
 
-fusker.config.dir = __dirname + "/public";
-fusker.config.banLength = 1;
-fusker.config.verbose = true;
 
-fusker.http.detectives.push('csrf', 'xss', 'sqli', 'lfi', '404');
-fusker.http.payloads.push();
-fusker.socket.detectives.push('xss', 'sqli', 'lfi');
-fusker.socket.payloads.push();
 
 // Variables
 var 	instances = {},
@@ -46,13 +37,12 @@ var 	instances = {},
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 makeUniverse();  
 app.configure(function(){
-	app.use(connect.compress());
-	app.set('views', __dirname + '/views');
+	app.set('views', __dirname + '/views');io = require('socket.io').listen(server),
 	app.set('view engine', 'jade');
 	app.use(connect.favicon("public/favicon.ico"));
 	app.use(app.router);
 	app.use(express.logger('dev'));
-	app.use(connect.static(fusker.config.dir));	
+	app.use(connect.static(__dirname + '/public'));	
 });
 
 // Route bindings
@@ -63,6 +53,8 @@ app.get('/guide', website.guide);
 app.get('/community', website.community);
 
 app.get('/play', game.play);
+
+app.get('/wiki', website.redirect);
 
 
 server.listen(80);
