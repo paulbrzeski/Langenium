@@ -54,7 +54,7 @@ app.get('/community', website.community);
 
 app.get('/play', game.play);
 
-app.get('/wiki', website.redirect);
+app.get('/wiki/*', website.redirect);
 
 server.listen(80);
 
