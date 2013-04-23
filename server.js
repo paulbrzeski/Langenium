@@ -35,14 +35,16 @@ var 	instances = {},
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Startup
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-makeUniverse();  
-app.configure(function(){
+makeUniverse();
+app.configure(function () {
+	app.use(connect.compress());
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
+	app.set('view options', {pretty: true});
 	app.use(connect.favicon("public/favicon.ico"));
 	app.use(app.router);
-	app.use(express.logger('dev'));
-	app.use(connect.static(__dirname + '/public'));	
+	app.use(connect.logger('dev'));
+	app.use(connect.static(__dirname + '/public'));
 });
 
 // Route bindings

@@ -1,0 +1,107 @@
+/**************************************************************
+	Langenium Website Styles
+	Author: Paul Brzeski
+**************************************************************/
+/*
+		General
+*/
+ul { 
+	padding: 0;
+}
+li {
+	list-style: none;
+}
+a:hover {
+	cursor: pointer;
+}
+.hidden {
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	display: none;
+}
+html body {
+	font-size: 12px;
+
+	letter-spacing: .1em;
+	font-family: 'Aldrich', courier;
+	background-color: #000000;
+}
+html, html * {
+	color: #CCCCCC;
+}
+a {
+	text-decoration: none;
+}
+.row {
+	margin: 0;
+}
+.row a {
+	color: #FFFF00;
+}
+.row a:hover {
+
+	text-shadow: 0px 0px 10px #AAAA00;
+}
+.row .round-box > div {
+	min-height: 350px;
+}
+.row .round-box:first-child {
+	margin-right: .5em;
+}
+.round-box {
+	margin: .5em 0 .25em 0;
+	border-radius: 15px;
+	border: solid 5px #1A1A1A;
+	float: left;
+}
+
+.round-box > div {
+	border-radius: 10px;
+	padding: 1em 1.7em;
+	box-shadow: 0 0 50px #000000;
+    -webkit-box-shadow: 0 0 50px #000000; 
+    -moz-box-shadow: 0 0 50px #000000; 
+	background: #1a1a1a; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIyMCUiIHN0b3AtY29sb3I9IiMxYTFhMWEiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSI4MCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  #1a1a1a 20%, #000000 80%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(20%,#1a1a1a), color-stop(80%,#000000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #1a1a1a 20%,#000000 80%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #1a1a1a 20%,#000000 80%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #1a1a1a 20%,#000000 80%); /* IE10+ */
+	background: linear-gradient(to bottom,  #1a1a1a 20%,#000000 80%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1a1a', endColorstr='#000000',GradientType=0 ); /* IE6-8 */
+
+}
+.round-box > div h3 {
+	text-transform:  capitalize;
+}
+/*
+		Header 
+*/
+h1 a {
+	background: url(../images/logo-01.png) no-repeat top left;
+	display: block;
+	width: 271px;
+	height: 75px;
+	margin: 0 0 0 .25em;
+}
+
+.container > .round-box:first-child {
+	width:  99.25%;
+}
+.round-box > div#header {
+	width:  100%;
+	padding: .25em 0;
+	background: #1a1a1a; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSI0OCUiIHN0b3AtY29sb3I9IiMxYTFhMWEiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  #1a1a1a 48%, #000000 60%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(48%,#1a1a1a), color-stop(60%,#000000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #1a1a1a 48%,#000000 60%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #1a1a1a 48%,#000000 60%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #1a1a1a 48%,#000000 60%); /* IE10+ */
+	background: linear-gradient(to bottom,  #1a1a1a 48%,#000000 60%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1a1a', endColorstr='#000000',GradientType=0 ); /* IE6-8 */
+}
