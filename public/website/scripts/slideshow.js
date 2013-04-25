@@ -11,8 +11,7 @@ $(document).ready(function () {
 	});
 	$('#slideshow .slides').cycle({
 		fx: 'fade',
-		delay: 100,
-		pause: 1
+		delay: 100
 	});
 
 
@@ -24,7 +23,7 @@ $(window).load(function () {
 	var firstScriptTag = document.getElementsByTagName('script')[0];
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	var player;
-});
+ });
 
 function onYouTubePlayerAPIReady() {
 	$('.video').each(function () {
@@ -33,18 +32,18 @@ function onYouTubePlayerAPIReady() {
 		player = new YT.Player(id, {
 			height: '315',
 			width: '420',
-			videoId: id,
-			events: {
-				"onStateChange": pauseSlideshow()
-			}
+			videoId: id
 		});
+		player.addEventListener("onStateChange", pauseSlideshow);
 		$(this).remove();
 	});
 }
-function pauseSlideshow() {
-	if (this.getPlayerState > 0) {
+function pauseSlideshow(event) {
+	if (event.data == '1') {
 		$('#slideshow .slides').cycle('pause');
-		console.log('Slideshow paused');
+	}
+	else if ((event.data == '0') || (event.data == '2')) {
+		$('#slideshow .slides').cycle('resume');
 	}
 	
 }
