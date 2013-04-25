@@ -92,7 +92,7 @@ function makeUniverse() {
 		}); 
 	};
 	
-	db.get("instance_objects", { instance_id: "master" }, objects);
+	db.queryClientDB("instance_objects", { instance_id: "master" }, objects);
 
 }
 

@@ -50,7 +50,7 @@ function login(socket, data, db, instances, client_sessions) {
 	
 	};
 	
-	db.get("players", { username: data.username }, loginUser);
+	db.queryClientDB("players", { username: data.username }, loginUser);
 	
 	}
 										
@@ -98,7 +98,7 @@ function prepareLoadInstructions(objects, db, send_instructions) {
                  }
 				 send_instructions(object);
 			};
-			db.get("objects", {type: obj}, val);
+			db.queryClientDB("objects", {type: obj}, val);
 		}
 	});
 }
