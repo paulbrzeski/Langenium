@@ -4,35 +4,60 @@
 			#slideshow.round-box
 				h2.hidden Slideshow
 				ul.slides
+					li						
+						.text
+							h3 Game trailer
+							p A game bla bla bla
+						iframe(width="420",height="315",src="http://www.youtube.com/embed/a4ebwHrVykI?enablejsapi=1&version=3&playerapiid=a4ebwHrVykI",frameborder="0",allowfullscreen)
 					li
-						.text.left
+						.text
+							h3 Game trailer
+							p Check out the game trailer
+						img(src='/website/images/slide1-01.png')
+					li
+						.text
 							h3 Welcome to Langenium
 							p A web-based airship MMORPG in a 3D sci-fi setting.
 							p This site is currently under construction.
 							p Get updates from the 
 								a(href='http://www.facebook.com/Langenium') Langenium Facebook page.
-							img(src='/website/images/slide2-01.png').right
+						img(src='/website/images/slide2-01.png')
 					li
-						.text.left
-							h3 Game trailer
-							p Check out the game trailer
-							iframe(width="420",height="315",src="http://www.youtube.com/embed/cJcr09qIVrI",frameborder="0",allowfullscreen).right
-					li
-						.text.left
-							h3 Game trailer
-							p A game bla bla bla
-							img(src='/website/images/slide1-01.png').right
-					li
-						.text.right
-							h3 Game trailer
+						iframe(width="420",height="315",src="http://www.youtube.com/embed/tPPEHiuq5n4?enablejsapi=1&version=3&playerapiid=tPPEHiuq5n4",frameborder="0",allowfullscreen)
+						.text
+							h3 Storyline trailer
 							p A game bla bla bla
 	.round-box.last
 		.span-6.last 
 			#play
 				h2.hidden Play
 				h3 Play Langenium
-				p	You will eventually be able to play Langenium by connecting with either OpenID or Facebook. 
-				p	For now, give the test demo a spin.
+				.content
+					p	Langenium will eventually use OpenID and Facebook for sign-in. 
+					p	For now, give the test demo a spin.
+					table
+						tr
+							td 
+								strong W
+							td Up
+							td 
+								strong A
+							td Left
+						tr
+							td 
+								strong S
+							td Down
+							td 
+								strong D
+							td Right
+						tr
+							td(colspan='2') 
+								strong Mouse-Scroll
+							td(colspan='2') Zoom
+						tr
+							td(colspan='2') 
+								strong Left-Click Hold
+							td(colspan='2') Rotate view
 				a(href='/play',target='_new').button 
 					span Launch game
 				p.small Requires Google Chrome or Firefox. Opera and IE currently don't support THREEJS
@@ -76,14 +101,20 @@
 				h3 Game guide
 				ul
 					li
-						a(href='#') How to play
+						a(href='#')
+							span How to play
 					li
-						a(href='#') Story
+						a(href='#')
+							span Story
 					li
-						a(href='#') Locations
+						a(href='#')
+							span Locations
 					li
-						a(href='#') Factions
+						a(href='#')
+							span Factions
 					li
-						a(href='#') Ships
+						a(href='#')
+							span Ships
 					li
-						a(href='#') Enemies
+						a(href='#')
+							span Enemies

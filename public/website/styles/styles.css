@@ -44,7 +44,7 @@ a {
 	text-shadow: 0px 0px 10px #AAAA00;
 }
 .row .round-box > div {
-	min-height: 350px;
+	min-height: 375px;
 }
 .row .round-box:first-child {
 	margin-right: .5em;
