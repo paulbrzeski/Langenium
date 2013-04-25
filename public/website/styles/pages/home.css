@@ -206,12 +206,30 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b0e0f', end
 	background-color:  #000000;
 	display:  block;	
 }
-
+#news ul li.loading {
+	display:  block;
+	padding:  1em 1em 2em 17em;
+}
+#news ul li.loading h3 span {
+	float:  left;
+	display:  inline-block;
+	font-size:  2em;
+	line-height: 3em;
+	color:  #333333;
+}
+#news ul li.loading h3 img {
+	float:  left;
+	margin-top: 1em;
+	padding: 1em 1em 0 1em;
+}
 #news ul li {
+	display:  none;
+	float:  left;
+	width:  70%;
 	position:  relative;
 	border-bottom: dashed 1px #333333;
-	margin:  0 .75em;
-	padding:  1em 1em 2em 17.5em;
+	margin:  0 1%;
+	padding:  1em 1% 2em 27%;
 }
 #news ul li:last-child {
 	border-bottom: none;
