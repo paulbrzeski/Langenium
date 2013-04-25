@@ -39,7 +39,7 @@ function onYouTubePlayerAPIReady() {
 	});
 }
 function pauseSlideshow(event) {
-	if (event.data == '1') {
+	if ((event.data > 0) && (event.data != 2))  {
 		$('#slideshow .slides').cycle('pause');
 	}
 	else if ((event.data == '0') || (event.data == '2')) {
