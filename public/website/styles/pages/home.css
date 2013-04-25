@@ -208,11 +208,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b0e0f', end
 }
 
 #news ul li {
-
+	position:  relative;
 	border-bottom: dashed 1px #333333;
-
 	margin:  0 .75em;
-	padding:  1em 1em 2em 1em;
+	padding:  1em 1em 2em 17.5em;
 }
 #news ul li:last-child {
 	border-bottom: none;
@@ -221,6 +220,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b0e0f', end
 	color: #666666;
 }
 
+#news ul li a img {
+
+	position:  absolute;
+	top: 2em;
+	left:  2em;
+}
 /* Game guide */
 #game_guide h3 {
 	margin: 1em 1em 0 0;

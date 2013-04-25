@@ -49,6 +49,7 @@ app.configure(function () {
 
 // Route bindings
 app.get('/', website.index);
+app.get('/news', website.news);
 app.get('/about', website.about);
 app.get('/gallery', website.gallery);
 app.get('/guide', website.guide);
