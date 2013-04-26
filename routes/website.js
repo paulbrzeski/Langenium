@@ -36,15 +36,27 @@ exports.gallery = function(req, res) {
 	res.render('website/index', { page: 'pages/gallery' });
 };
 
-exports.guide = function (req, res) {
-	console.log(req);
-	var processResult = function (result) {
+exports.guide = function (req, res)
+{
+	var page = req.params[0];
+
+	if (page.length == 0) { page = "Game Guide"; }
+
+	var processResult = function (result)
+	{
 		res.setHeader("Expires", "-1");
 		res.setHeader("Cache-Control", "must-revalidate, private");
-		console.log(result);
-		res.render('website/index', { page: 'pages/guide', content: result[0] });
+		if (result.length == 0)
+		{
+			res.writeHead(302, { 'Location': 'http://' + req.headers.host + '/guide/' });
+			res.end();
+		}
+		else
+		{
+			res.render('website/index', { page: 'pages/guide', content: result[0] });
+		}
 	};
-	db.queryWebsiteDB("guide", { Title: "Game Guide" }, processResult);
+	db.queryWebsiteDB("guide", { Title: page }, processResult);
 };
 
 exports.community = function(req, res) {

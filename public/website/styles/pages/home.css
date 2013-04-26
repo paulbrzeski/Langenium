@@ -120,7 +120,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b0e0f', end
 }
 /* Play */
 #play h3 {
-	margin: 1em 0;
+	margin: .5em 0;
+	text-transform:  uppercase;
+	color: #999999;
+	font-size: 1.5em;
+	text-shadow: 1px 4px 6px #1A1A1A, 0 0 0 #000000, 1px 4px 6px #1A1A1A;
 }
 #play p {
 	margin: 1.5em;
@@ -246,7 +250,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b0e0f', end
 }
 /* Game guide */
 #game_guide h3 {
-	margin: 1em 1em 0 0;
+	margin: .5em 0 0 0;
+	text-transform:  uppercase;
+	color: #999999;
+	font-size: 1.5em;
+	text-shadow: 1px 4px 6px #1A1A1A, 0 0 0 #000000, 1px 4px 6px #1A1A1A;
 }
 #game_guide ul {
 	float:  left;
