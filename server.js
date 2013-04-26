@@ -35,6 +35,8 @@ var 	instances = {},
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Startup
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+website.setDB(db);
 makeUniverse();
 app.configure(function () {
 	app.use(connect.compress());
@@ -50,12 +52,12 @@ app.configure(function () {
 // Route bindings
 app.get('/', website.index);
 app.get('/news', website.news);
-app.get('/about', website.about);
-app.get('/gallery', website.gallery);
-app.get('/guide', website.guide);
-app.get('/community', website.community);
+app.get('/about/*', website.about);
+app.get('/gallery/*', website.gallery);
+app.get('/guide/*', website.guide);
+app.get('/community/*', website.community);
 
-app.get('/play', game.play);
+app.get('/play/*', game.play);
 
 app.get('/wiki/*', website.redirect);
 

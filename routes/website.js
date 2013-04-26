@@ -10,7 +10,8 @@
 	Globals
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-var https = require('https');
+var https = require('https'),
+	db;
 
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -35,10 +36,15 @@ exports.gallery = function(req, res) {
 	res.render('website/index', { page: 'pages/gallery' });
 };
 
-exports.guide = function(req, res) {
-	res.setHeader("Expires", "-1");
-	res.setHeader("Cache-Control", "must-revalidate, private");
-	res.render('website/index', { page: 'pages/guide' });
+exports.guide = function (req, res) {
+	console.log(req);
+	var processResult = function (result) {
+		res.setHeader("Expires", "-1");
+		res.setHeader("Cache-Control", "must-revalidate, private");
+		console.log(result);
+		res.render('website/index', { page: 'pages/guide', content: result[0] });
+	};
+	db.queryWebsiteDB("guide", { Title: "Game Guide" }, processResult);
 };
 
 exports.community = function(req, res) {
@@ -55,6 +61,11 @@ exports.redirect = function(req, res) {
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Special
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+exports.setDB = function (database) {
+	db = database;
+	
+}
 
 exports.news = function (req, res) {
 	//The url we want is: 'www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new'
