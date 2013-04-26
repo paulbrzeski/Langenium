@@ -57,6 +57,7 @@ app.get('/gallery/*', website.gallery);
 app.get('/guide/*', website.guide);
 app.get('/community/*', website.community);
 
+app.get('/play', game.play);
 app.get('/play/*', game.play);
 
 app.get('/wiki/*', website.redirect);
