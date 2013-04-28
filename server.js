@@ -11,35 +11,45 @@
 	Globals
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+var 	// Variables
+		instances = {},
+		client_sessions = [],
+		host_url = process.env['HOST_URL'],
+		app_id = process.env['APP_ID'],
+		app_secret = process.env['APP_SECRET'];
 
-var 	// Libs
+var 	// 3rd Party Libs
 		connect = require('connect'),
 		express = require('express'),
 		app = express(),
+		passport  = require('passport'),
+		fbsdk = require('facebook-sdk'),
+		// Fire up libs
 		server = require('http').createServer(app),
 		io = require('socket.io').listen(server),
-		// Modules
+		fb = new fbsdk.Facebook({ appId: app_id, secret: app_secret }),
+		FacebookStrategy = require('passport-facebook').Strategy,
+		// Langenium Modules
 		db = require("./db.js"),
 		events = require('./events.js'),
 		instance = require('./instance.js'),
 		//Routes
 		website = require('./routes/website.js'),
 		game = require('./routes/game.js');
-
-
-
-// Variables
-var 	instances = {},
-		client_sessions = [];
+	
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Startup
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-website.setDB(db);
+website.setProviders(db, fb);
 makeUniverse();
 app.configure(function () {
+	app.use(connect.cookieParser());
+	app.use(connect.bodyParser());
 	app.use(connect.compress());
+	app.use(passport.initialize());
+  	app.use(passport.session());
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
 	app.set('view options', {pretty: true});
@@ -47,6 +57,11 @@ app.configure(function () {
 	app.use(app.router);
 	app.use(connect.logger('dev'));
 	app.use(connect.static(__dirname + '/public'));
+ 	app.use(express.methodOverride());
+  	app.use(connect.session({ secret: 'keyboard cat' }));
+
+	app.use(fb);
+
 });
 
 // Route bindings
@@ -62,6 +77,47 @@ app.get('/play/*', game.play);
 
 app.get('/wiki/*', website.redirect);
 
+// Setup Facebook authentication
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findOne(id, function (err, user) {
+    done(err, user);
+  });
+});
+passport.use(new FacebookStrategy({
+    clientID: app_id,
+    clientSecret: app_secret,
+    callbackURL: "http://" + host_url + "/auth/facebook/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+  	console.log(profile);
+    return done(null, profile);
+  }
+));
+
+app.get('/login', function(req, res){
+  res.render('website/pages/login', { user: req.user });
+});
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+app.get('/auth/facebook/callback',  passport.authenticate('facebook', { successRedirect: '/',
+                                      									failureRedirect: '/login' }));
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
+
+// Test Facebook albums
+fb.api('/Langenium/albums/' , function(resp) {
+	//console.log("Albums " + JSON.stringify(resp));
+});
+
+
+// Start server
 server.listen(80);
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -99,5 +155,3 @@ function makeUniverse() {
 	db.queryClientDB("instance_objects", { instance_id: "master" }, objects);
 
 }
-
-
