@@ -112,9 +112,7 @@ app.get('/logout', function(req, res){
 
 
 // Test Facebook albums
-fb.api('/Langenium/albums/' , function(resp) {
-	//console.log("Albums " + JSON.stringify(resp));
-});
+
 
 
 // Start server
