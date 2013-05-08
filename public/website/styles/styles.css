@@ -136,12 +136,26 @@ h1 a {
 	float: left;
 	display: inline-block;
 	margin: 0 1em 0 0;
-	padding-right: 1em;
-	border-right: solid 2px #333333;
+	padding-right: .5em;
+}
+.breadcrumbs li p.arrow {
+	float: right;
+	font-size: 0px; line-height: 0%; width: 0px;
+	margin-top: 2px;
+
+	border-top: 4px solid #000000;
+	border-left: 8px solid #333333;
+	border-bottom: 4px solid #000000;
+
 }
 .breadcrumbs li a {
 	color: #999999;
+	padding-right: 1em;
 }
 .breadcrumbs li:last-child {
+	border: none;
+}
+
+.breadcrumbs li:last-child p.arrow {
 	border: none;
 }
