@@ -42,7 +42,7 @@ var 	// 3rd Party Libs
 	Startup
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-website.setProviders(db, fb);
+
 makeUniverse();
 app.configure(function () {
 	app.use(connect.cookieParser());
@@ -64,17 +64,26 @@ app.configure(function () {
 
 });
 
+// Bind website 
+website.setProviders(db, fb);
+
 // Route bindings
+//		Home page
 app.get('/', website.index);
 app.get('/news', website.news);
+//		About
 app.get('/about/*', website.about);
+//		Gallery
+app.get('/gallery/', website.gallery_list);
 app.get('/gallery/*', website.gallery);
+//		Game guide
 app.get('/guide/*', website.guide);
+//		Community
 app.get('/community/*', website.community);
-
+//		Play Langenium
 app.get('/play', game.play);
 app.get('/play/*', game.play);
-
+//		Security overrides
 app.get('/wiki/*', website.redirect);
 
 // Setup Facebook authentication

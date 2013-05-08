@@ -10,16 +10,19 @@ html
 						a(href='/') 
 							span.hidden Langenium
 					include menu
-			if (page == 'pages/home')
-				include pages/home
-			if (page == 'pages/about')
-				include pages/about
-			if (page == 'pages/gallery')
-				include pages/gallery
-			if (page == 'pages/guide')
-				include pages/guide
-			if (page == 'pages/community')
-				include pages/community
+			case page
+				when 'pages/home'
+					include pages/home				
+				when 'pages/about'
+					include pages/about
+				when 'pages/gallery_list'
+					include pages/gallery_list
+				when 'pages/gallery_view'
+					include pages/gallery_view
+				when 'pages/guide'
+					include pages/guide
+				when 'pages/community'
+					include pages/community
 	script
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-37159175-1']);

@@ -62,12 +62,12 @@
 	background-color:  #1A1A1A;
 	margin:  0 auto 1em auto;
 }
-#menu li:hover .menu-item {
+#menu li:hover .menu-item, #menu li .menu-item.active {
 	box-shadow: 0 0 35px #1A1A1A;
     -webkit-box-shadow: 0 0 35px #1A1A1A; 
     -moz-box-shadow: 0 0 35px #1A1A1A; 
 }
-#menu li:hover .menu-item .indicator {
+#menu li:hover .menu-item .indicator,#menu li .menu-item.active .indicator {
 	box-shadow: 0 0 15px #005700;
     -webkit-box-shadow: 0 0 15px #005700; 
     -moz-box-shadow: 0 0 15px #005700; 

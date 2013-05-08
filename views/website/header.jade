@@ -9,15 +9,18 @@ link(rel='stylesheet', href='/shared/styles/jquery-ui-1.10.2.custom.css')
 link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Aldrich')
 script(src='/shared/scripts/jquery.min.js')
 script(src='/shared/scripts/jquery.cycle.all.js')
-if (page == 'pages/home')
-	link(rel='stylesheet', href='/website/styles/pages/home.css')
-	script(src='/website/scripts/slideshow.js')
-	script(src='/website/scripts/news.js')
-if (page == 'pages/about/')
-	link(rel='stylesheet', href='/website/styles/pages/about.css')
-if (page == 'pages/gallery/')
-	link(rel='stylesheet', href='/website/styles/pages/gallery.css')
-if (page == 'pages/guide/')
-	link(rel='stylesheet', href='/website/styles/pages/guide.css')
-if (page == 'pages/community/')
-	link(rel='stylesheet', href='/website/styles/pages/community.css')
+case page
+	when 'pages/home'
+		link(rel='stylesheet', href='/website/styles/pages/home.css')
+		script(src='/website/scripts/slideshow.js')
+		script(src='/website/scripts/news.js')
+	when 'pages/about/'
+		link(rel='stylesheet', href='/website/styles/pages/about.css')
+	when 'pages/gallery_list'
+		link(rel='stylesheet', href='/website/styles/pages/gallery.css')
+	when 'pages/gallery_view'
+		link(rel='stylesheet', href='/website/styles/pages/gallery.css')
+	when 'pages/guide/'
+		link(rel='stylesheet', href='/website/styles/pages/guide.css')
+	when 'pages/community/'
+		link(rel='stylesheet', href='/website/styles/pages/community.css')

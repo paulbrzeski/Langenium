@@ -20,21 +20,18 @@ var https = require('https'),
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 exports.index = function(req, res) {
-	res.setHeader("Expires", "-1");
-	res.setHeader("Cache-Control", "must-revalidate, private");
-	res.render('website/index', { page: 'pages/home' });
+	render(req, res, 'website/index', { page: 'pages/home' });
 };
 
 exports.about = function(req, res) {
-	res.setHeader("Expires", "-1");
-	res.setHeader("Cache-Control", "must-revalidate, private");
-	res.render('website/index', { page: 'pages/about', variable: "Some text" });
+	render(req, res, 'website/index', { page: 'pages/about', variable: "Some text" });
 };
 
+exports.gallery_list = function(req, res) {
+	gallery_albums(req, res);
+};
 exports.gallery = function(req, res) {
-	res.setHeader("Expires", "-1");
-	res.setHeader("Cache-Control", "must-revalidate, private");
-	res.render('website/index', { page: 'pages/gallery' });
+	gallery_view(req, res);
 };
 
 exports.guide = function (req, res)
@@ -45,31 +42,32 @@ exports.guide = function (req, res)
 
 	var processResult = function (result)
 	{
-		res.setHeader("Expires", "-1");
-		res.setHeader("Cache-Control", "must-revalidate, private");
 		if (result.length == 0)
 		{
-			res.writeHead(302, { 'Location': 'http://' + req.headers.host + '/guide/' });
-			res.end();
+			// 404
 		}
 		else
 		{
-			res.render('website/index', { page: 'pages/guide', content: result[0] });
+			render(req, res, 'website/index', { page: 'pages/guide', content: result[0] })
 		}
 	};
 	db.queryWebsiteDB("guide", { Title: page }, processResult);
 };
 
 exports.community = function(req, res) {
-	res.setHeader("Expires", "-1");
-	res.setHeader("Cache-Control", "must-revalidate, private");
-	res.render('website/index', { page: 'pages/community' });
+	render(req, res, 'website/index', { page: 'pages/community' });
 };
 
 exports.redirect = function(req, res) {
-	res.writeHead(302, { 'Location': 'http://127.0.0.1/'  });
+	res.writeHead(302, { 'Location': 'http://langenium.com/'  });
 	res.end();
 };
+
+var render = function(req, res, template, variables) {
+	res.setHeader("Expires", "-1");
+	res.setHeader("Cache-Control", "must-revalidate, private");
+	res.render(template, variables);
+}
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Special
@@ -104,4 +102,101 @@ exports.news = function (req, res) {
 		});
 	});
 	getFeed.end();
+}
+
+var gallery_albums = function (req, res) {
+	var pages = [{name: 'Gallery', url: '/gallery/' }];
+	var breadcrumb_trail = makeBreadcrumbs(pages);
+	console.log(breadcrumb_trail);
+	fb.api('/Langenium/albums/', function(data){
+		var albums = [];
+		for (var i = 0; i < data.data.length; i++) {
+			var album = {};
+			album.id = data.data[i].id;
+			album.name = data.data[i].name;
+			album.url = '/gallery/' + album.name + '/' + album.id;
+			album.photo_url = 'http://graph.facebook.com/' + data.data[i].cover_photo + '/picture?type=album';
+			albums.push(album);
+
+		}
+
+		render(req, res, 'website/index', 
+			{ 
+				page: 'pages/gallery_list', 
+				gallery_list: albums, 
+				breadcrumbs: breadcrumb_trail
+			}
+		); 
+	});
+}
+
+var gallery_view = function (req, res) {
+	var url_params = req.params[0].split('/');
+	console.log(url_params);
+	switch(url_params.length) {
+		case 2: // +/gallery/album_name/album_id
+			var pages = [
+				{ name: 'Gallery', url: '/gallery/' },
+				{ name: url_params[0], url: '/gallery/' + url_params[0] + '/' + url_params[1] }
+			];
+			var breadcrumb_trail = makeBreadcrumbs(pages);
+			fb.api('/' + url_params[1] + '/photos/', function(data){
+				var photos = [];
+				for (var i = 0; i < data.data.length; i++) {
+					var photo = {};
+					photo.id = data.data[i].id;
+					photo.name = data.data[i].name;
+					photo.url = '/gallery/' + url_params[0] + '/' + url_params[1] + '/view/' + photo.id;
+					photo.photo_url = data.data[i].images[data.data[i].images.length - 1].source;
+					photos.push(photo);
+
+				}
+
+				render(req, res, 'website/index', 
+					{ 
+						page: 'pages/gallery_list', 
+						gallery_list: photos,
+						breadcrumbs: breadcrumb_trail
+					}
+				); 
+			});
+			break;
+		case 4: // +/gallery/album_name/view/photo_id
+			var pages = [
+				{ name: 'Gallery', url: '/gallery/' },
+				{ name: url_params[0], url: '/gallery/' + url_params[0] + '/' + url_params[1] },
+				{ name: 'Viewing image', url: '#' },
+			];
+			var breadcrumb_trail = makeBreadcrumbs(pages);
+			fb.api('/' + url_params[3], function(data){
+
+				var photo = {};
+				photo.id = data.id;
+				photo.name = data.name;
+				photo.url = data.link;
+				photo.photo_url = data.images[1].source;
+
+				render(req, res, 'website/index', 
+					{ 
+						page: 'pages/gallery_view', 
+						gallery: photo,
+						breadcrumbs: breadcrumb_trail
+					}
+				); 
+			});
+			break;
+	}
+	
+
+}
+
+function makeBreadcrumbs (pages) {
+	var breadcrumbs = [];
+	for (var i = 0; i < pages.length; i++) {
+		var breadcrumb = {};
+		breadcrumb.name = pages[i].name;
+		breadcrumb.url = pages[i].url;
+		breadcrumbs.push(breadcrumb);
+	}
+	return breadcrumbs;
 }
