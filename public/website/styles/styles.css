@@ -77,6 +77,7 @@ a {
 .round-box > div h3 {
 	text-transform:  capitalize;
 }
+
 /*
 		Header 
 */
@@ -92,7 +93,7 @@ h1 a {
 	width:  99.25%;
 }
 .round-box > div#header {
-	width:  100%;
+	width:  1130px;
 	padding: .25em 0;
 	background: #1a1a1a; /* Old browsers */
 	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
@@ -105,7 +106,24 @@ h1 a {
 	background: linear-gradient(to bottom,  #1a1a1a 48%,#000000 60%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1a1a', endColorstr='#000000',GradientType=0 ); /* IE6-8 */
 }
-
+div#top_nav {
+	width:  1130px;
+}
+div#top_nav ul {
+	float: right;
+}
+div#top_nav li {
+	display: block;
+	float: left;
+	margin: 1.5em 0 0 1.5em;
+}
+div#top_nav li.user img {
+	float: left;
+	margin: -10px 0 0 0;
+} 
+div#top_nav li.user a {
+	margin: 0 .5em;
+}
 /*
 		Breadcrumbs 
 */

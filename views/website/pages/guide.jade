@@ -1,6 +1,15 @@
 .row
 	.round-box.last
 		.span-21.last
-			h2!= content.Title
+			h2 Game Guide
+			ul.breadcrumbs
+				- each breadcrumb in breadcrumbs
+					li
+						a(href=breadcrumb.url)= breadcrumb.name
+						p.arrow
+			if (logged_id == true)
+				a(href=edit_url) Edit
+			h3= content.Title
+
 			.round_box!= content.Content
 			

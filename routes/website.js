@@ -36,24 +36,63 @@ exports.gallery = function(req, res) {
 
 exports.guide = function (req, res)
 {
-	var page = req.params[0];
+	var pages = [];
+	
+	var search_query = req.params[0];
+	var template = 'pages/guide';
+	if (search_query.indexOf('edit') >= 0) {
 
-	if (page.length == 0) { page = "Game Guide"; }
+		template = 'pages/guide_edit';
+		if (search_query != 'edit') {
+			search_query = search_query.replace('/edit','');
+		}
+		else {
+			search_query = search_query.replace('edit','');
+		}
+	}
+	
+	if (search_query.length == 0) {
+		search_query = "Game Guide"; 
+	}
+	else {
+		pages.push({name: 'Game Guide', url: '/guide/'});
+	}
 
 	var processResult = function (result)
 	{
 		if (result.length == 0)
 		{
-			// 404
+			console.log(search_query);
 		}
 		else
 		{
-			render(req, res, 'website/index', { page: 'pages/guide', content: result[0] })
+			pages.push({name: search_query, url: '/guide/' + search_query});
+			if (req.params[0].indexOf('edit') >= 0) {
+				pages.push({name: 'Edit', url: '#'});
+			}
+			var breadcrumb_trail = makeBreadcrumbs(pages);
+			render(req, res, 'website/index', 
+				{ 
+					page: template, 
+					content: result[0],
+					breadcrumbs: breadcrumb_trail,
+					edit_url: '/guide/' + search_query + '/edit'
+				}
+			);
 		}
 	};
-	db.queryWebsiteDB("guide", { Title: page }, processResult);
+
+	db.queryWebsiteDB("guide", { Title: search_query }, processResult);
+
 };
 
+exports.guide_save = function(req, res) {
+	console.log(req.body.title)
+	console.log(req.body.content)
+	db.saveGuide(req.body.title, req.body.content);
+	res.writeHead(302, { 'Location': '/guide/'+req.body.title  });
+	res.end();
+};
 exports.community = function(req, res) {
 	render(req, res, 'website/index', { page: 'pages/community' });
 };
@@ -66,6 +105,13 @@ exports.redirect = function(req, res) {
 var render = function(req, res, template, variables) {
 	res.setHeader("Expires", "-1");
 	res.setHeader("Cache-Control", "must-revalidate, private");
+	if ((req.user)&&(req.user.username == 'TheZeski')) { // this is hopefully overkill as FB is in sandbox_mode :D
+		variables.logged_id = true;
+		variables.user = { username: req.user.username, profile_img: 'https://graph.facebook.com/'+req.user.facebook_id+'/picture?width=20&height=20' };
+	}
+	else {
+		variables.logged_id = false;	
+	}
 	res.render(template, variables);
 }
 
@@ -107,7 +153,6 @@ exports.news = function (req, res) {
 var gallery_albums = function (req, res) {
 	var pages = [{name: 'Gallery', url: '/gallery/' }];
 	var breadcrumb_trail = makeBreadcrumbs(pages);
-	console.log(breadcrumb_trail);
 	fb.api('/Langenium/albums/', function(data){
 		var albums = [];
 		for (var i = 0; i < data.data.length; i++) {
@@ -132,7 +177,6 @@ var gallery_albums = function (req, res) {
 
 var gallery_view = function (req, res) {
 	var url_params = req.params[0].split('/');
-	console.log(url_params);
 	switch(url_params.length) {
 		case 2: // +/gallery/album_name/album_id
 			var pages = [

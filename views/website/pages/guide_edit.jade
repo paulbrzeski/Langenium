@@ -1,0 +1,18 @@
+.row
+	.round-box.last
+		.span-21.last
+			h2 Game Guide
+			ul.breadcrumbs
+				- each breadcrumb in breadcrumbs
+					li
+						a(href=breadcrumb.url)= breadcrumb.name
+						p.arrow
+			h3= content.Title
+			if (logged_id == true)
+				.round_box
+					form(method='post',action='/guide/save')
+						textarea(rows='20',cols='133',name='content')= content.Content
+						input(type='hidden',value=content.Title, name='title')
+						input(type='submit', value='Save').button 
+			else 
+				.round_box!= content.Content

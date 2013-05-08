@@ -52,8 +52,28 @@ function queryWebsiteDB(path, search_term, callback) {
 	});
 }
 
-
-
+exports.addUser = function(username, facebook_id) {
+	var users = website_db.collection('users');
+	users.save({
+		username: username,
+		facebook_id: facebook_id
+	})
+}
+exports.saveGuide = function(title, content) {
+	var guide = website_db.collection('guide');
+	console.log('Trying to save');
+	console.log(title);
+	guide.findAndModify({
+		query: { Title: title }, 
+		update : {$set:{Content:content}},
+		'new': true
+	},
+		function(err, new_content) {
+			if (err) {console.log(err);}
+			console.log(new_content);
+		}
+	);
+}
 
 
 

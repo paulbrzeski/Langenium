@@ -48,6 +48,7 @@ app.configure(function () {
 	app.use(connect.cookieParser());
 	app.use(connect.bodyParser());
 	app.use(connect.compress());
+	app.use(connect.session({ secret: 'keyboard cat' }));
 	app.use(passport.initialize());
   	app.use(passport.session());
 	app.set('views', __dirname + '/views');
@@ -58,7 +59,7 @@ app.configure(function () {
 	app.use(connect.logger('dev'));
 	app.use(connect.static(__dirname + '/public'));
  	app.use(express.methodOverride());
-  	app.use(connect.session({ secret: 'keyboard cat' }));
+  	
 
 	app.use(fb);
 
@@ -78,6 +79,7 @@ app.get('/gallery/', website.gallery_list);
 app.get('/gallery/*', website.gallery);
 //		Game guide
 app.get('/guide/*', website.guide);
+app.post('/guide/save', website.guide_save);
 //		Community
 app.get('/community/*', website.community);
 //		Play Langenium
@@ -88,32 +90,45 @@ app.get('/wiki/*', website.redirect);
 
 // Setup Facebook authentication
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+	done(null, user);
 });
 
-passport.deserializeUser(function(id, done) {
-  User.findOne(id, function (err, user) {
-    done(err, user);
-  });
+passport.deserializeUser(function(obj, done) {
+	done(null, obj);
 });
 passport.use(new FacebookStrategy({
-    clientID: app_id,
-    clientSecret: app_secret,
-    callbackURL: "http://" + host_url + "/auth/facebook/callback"
+	clientID: app_id,
+	clientSecret: app_secret,
+	callbackURL: "http://" + host_url + "/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-  	console.log(profile);
-    return done(null, profile);
+  	
+  	var checkUserExists = function(result){
+		if (result.length == 0) {
+			db.addUser(profile._json.username, profile._json.id);
+		}
+  	};
+ 	var user = { 
+ 		username: profile._json.username, 
+ 		facebook_id: profile._json.id
+ 	};
+  	db.queryWebsiteDB("users", { facebook_id: profile._json.id }, checkUserExists);
+	return done(null, user);
   }
 ));
-
-app.get('/login', function(req, res){
-  res.render('website/pages/login', { user: req.user });
-});
-
 app.get('/auth/facebook', passport.authenticate('facebook'));
-app.get('/auth/facebook/callback',  passport.authenticate('facebook', { successRedirect: '/',
-                                      									failureRedirect: '/login' }));
+app.get('/auth/facebook', passport.authenticate('facebook'));
+app.get('/auth/facebook/callback', function(req, res, next) {
+  passport.authenticate('facebook', function(err, user, info) {
+    if (err) { return next(err); }
+    if (!user) { console.log("User not found"); return res.redirect('/'); }
+    req.logIn(user, function(err) {
+      if (err) { console.log(err); return next(err); }
+      
+      return res.redirect('/');
+    });
+  })(req, res, next);
+});
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
