@@ -26,7 +26,7 @@ var events = function() {
 events.prototype.getUrl = function () {
 	if (window.location.href.indexOf("langenium") > 0)
 	{
-		return "http://langenium.com:8000";
+		return "http://langenium.com"; // NAS translates to :80
 		
 	}
 	else {
