@@ -26,7 +26,7 @@ var 	// 3rd Party Libs
 		fbsdk = require('facebook-sdk'),
 		// Fire up libs
 		server = require('http').createServer(app),
-		io = require('socket.io').listen(server),
+		io = require('socket.io').listen(8080),
 		fb = new fbsdk.Facebook({ appId: app_id, secret: app_secret }),
 		FacebookStrategy = require('passport-facebook').Strategy,
 		// Langenium Modules
