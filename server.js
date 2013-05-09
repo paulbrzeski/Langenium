@@ -120,13 +120,13 @@ app.get('/auth/facebook', passport.authenticate('facebook'));
 app.get('/auth/facebook', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback', function(req, res, next) {
   passport.authenticate('facebook', function(err, user, info) {
-    if (err) { return next(err); }
-    if (!user) { console.log("User not found"); return res.redirect('/'); }
-    req.logIn(user, function(err) {
-      if (err) { console.log(err); return next(err); }
-      
-      return res.redirect('/');
-    });
+	if (err) { return next(err); }
+	if (!user) { console.log("User not found"); return res.redirect('/'); }
+	req.logIn(user, function(err) {
+	  if (err) { console.log(err); return next(err); }
+	  
+	  return res.redirect('/');
+	});
   })(req, res, next);
 });
 app.get('/logout', function(req, res){
@@ -140,7 +140,7 @@ app.get('/logout', function(req, res){
 
 
 // Start server
-server.listen(80);
+server.listen(8000);
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions

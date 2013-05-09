@@ -10,6 +10,8 @@ lib-cov
 *.pid
 *.gz
 
+tracegl.js
+tracegl
 pids
 logs
 results

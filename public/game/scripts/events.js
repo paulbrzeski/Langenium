@@ -26,11 +26,11 @@ var events = function() {
 events.prototype.getUrl = function () {
 	if (window.location.href.indexOf("langenium") > 0)
 	{
-		return "http://langenium.com";
+		return "http://langenium.com:8000";
 		
 	}
 	else {
-		return "http://localhost";
+		return "http://localhost:8000";
 	}
 }
 events.prototype.setEventHandlers = function (socket) {
