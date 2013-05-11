@@ -25,3 +25,11 @@
     -webkit-box-shadow: 0 0 50px #000000; 
     -moz-box-shadow: 0 0 50px #000000; 
 }
+.round-box .span-21.last h3, .round-box .span-21.last .round_box {
+	float: left;
+	clear: both;
+}
+.round-box .span-21.last .subnav li {
+	float: left;
+	margin: 0.5em 1em 1em 0em;
+}

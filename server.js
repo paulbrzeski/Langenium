@@ -125,7 +125,7 @@ app.get('/auth/facebook/callback', function(req, res, next) {
 	req.logIn(user, function(err) {
 	  if (err) { console.log(err); return next(err); }
 	  
-	  return res.redirect('/');
+	  return res.redirect('/guide/');
 	});
   })(req, res, next);
 });
@@ -140,7 +140,8 @@ app.get('/logout', function(req, res){
 
 
 // Start server
-server.listen(8000, "127.0.0.1");
+//server.listen(8000, "127.0.0.1"); // production
+server.listen(80); // dev
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions

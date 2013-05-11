@@ -11,13 +11,12 @@
 					li
 						a(href=breadcrumb.url)= breadcrumb.name
 						p.arrow
-			h3= content.Title
+			h3 New article
 			if (logged_id == true)
 				.round_box
 					form(method='post',action='/guide/save')
-						textarea(rows='1',cols='133',name='newtitle')= content.Title
-						input(type='hidden',value=content.Title, name='title')
-						textarea(rows='20',cols='133',name='content')= content.Content
+						textarea(rows='1',cols='133', name='title')
+						textarea(rows='20',cols='133',name='content')
 						input(type='submit', value='Save').button 
 			else 
-				.round_box!= content.Content
+				.round_box

@@ -5,10 +5,6 @@
 			if (logged_id == true)
 				ul.subnav
 					li
-						a(href=edit_url) Edit
-					li 
-						a(href='/guide/Index') View Index
-					li
 						a(href='new') New
 			ul.breadcrumbs
 				- each breadcrumb in breadcrumbs
@@ -17,5 +13,9 @@
 						p.arrow
 			h3= content.Title
 
-			.round_box!= content.Content
-			
+			.round_box
+				ul
+					- each article in content
+						li
+							- var page_url = '/guide/' + article.Title;
+							a(href=page_url)= article.Title

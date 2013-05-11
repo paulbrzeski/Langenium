@@ -36,61 +36,111 @@ exports.gallery = function(req, res) {
 
 exports.guide = function (req, res)
 {
-	var pages = [];
-	
-	var search_query = req.params[0];
-	var template = 'pages/guide';
-	if (search_query.indexOf('edit') >= 0) {
 
-		template = 'pages/guide_edit';
-		if (search_query != 'edit') {
-			search_query = search_query.replace('/edit','');
+	var search_query = req.params[0] ? req.params[0] : '';
+	var reserved = ['index', 'Index', 'New', 'new'];
+	var reserved_page = false;
+
+	for (var i = 0; i < reserved.length; i++) {
+		if (reserved[i] == search_query) {
+			reserved_page = true;
+		}
+	}
+	if (reserved_page == false) {
+		var pages = [];
+		var template = 'pages/guide';
+		if (search_query.indexOf('edit') >= 0) {
+			template = 'pages/guide_edit';
+			if (search_query != 'edit') {
+				search_query = search_query.replace('/edit','');
+			}
+			else {
+				search_query = search_query.replace('edit','');
+			}
+		}
+		
+		if (search_query.length == 0) {
+			search_query = "Game Guide"; 
 		}
 		else {
-			search_query = search_query.replace('edit','');
+			pages.push({name: 'Game Guide', url: '/guide/'});
 		}
-	}
-	
-	if (search_query.length == 0) {
-		search_query = "Game Guide"; 
+
+		var processResult = function (result)
+		{
+			if (result.length == 0)
+			{
+				console.log(search_query);
+			}
+			else
+			{
+				pages.push({name: search_query, url: '/guide/' + search_query});
+				if (search_query.indexOf('edit') >= 0) {
+					pages.push({name: 'Edit', url: '#'});
+				}
+				var breadcrumb_trail = makeBreadcrumbs(pages);
+				render(req, res, 'website/index', 
+					{ 
+						page: template, 
+						content: result[0],
+						breadcrumbs: breadcrumb_trail,
+						edit_url: '/guide/' + search_query + '/edit'
+					}
+				);
+			}
+		};
+
+		db.queryWebsiteDB("guide", { Title: search_query }, processResult);
 	}
 	else {
-		pages.push({name: 'Game Guide', url: '/guide/'});
+		if ((search_query == 'new')||(search_query == 'New')) {
+			guide_new(req, res);
+		}
+		if ((search_query == 'index')||(search_query == 'Index')) {
+			guide_index(req, res);
+		}
 	}
+};
 
+var guide_new = function(req, res) {
+	var pages = [];
+
+	pages.push({name: 'New', url: '/guide/new'});
+	var breadcrumb_trail = makeBreadcrumbs(pages);
+	render(req, res, 'website/index', 
+		{ 
+			page: 'pages/guide_new', 
+			breadcrumbs: breadcrumb_trail
+		}
+	);
+		
+};
+
+var guide_index = function(req, res) {
+	var pages = [];
 	var processResult = function (result)
 	{
-		if (result.length == 0)
-		{
-			console.log(search_query);
-		}
-		else
-		{
-			pages.push({name: search_query, url: '/guide/' + search_query});
-			if (req.params[0].indexOf('edit') >= 0) {
-				pages.push({name: 'Edit', url: '#'});
-			}
+		console.log(result);
+		if (result.length == 0) { console.log('Failed to get list of guide articles'); } 
+		else {
+			pages.push({name: 'Index', url: 'Index'});
 			var breadcrumb_trail = makeBreadcrumbs(pages);
 			render(req, res, 'website/index', 
 				{ 
-					page: template, 
-					content: result[0],
-					breadcrumbs: breadcrumb_trail,
-					edit_url: '/guide/' + search_query + '/edit'
+					page: 'pages/guide_index', 
+					content: result,
+					breadcrumbs: breadcrumb_trail
 				}
 			);
 		}
 	};
-
-	db.queryWebsiteDB("guide", { Title: search_query }, processResult);
-
+	db.queryWebsiteDB("guide", null, processResult);
 };
 
 exports.guide_save = function(req, res) {
-	console.log(req.body.title)
-	console.log(req.body.content)
-	db.saveGuide(req.body.title, req.body.content);
-	res.writeHead(302, { 'Location': '/guide/'+req.body.title  });
+	console.log(req.body);
+	db.saveGuide(req.body.newtitle, req.body.title, req.body.content);
+	res.writeHead(302, { 'Location': '/guide/'+req.body.newtitle  });
 	res.end();
 };
 exports.community = function(req, res) {
