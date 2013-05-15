@@ -140,8 +140,8 @@ app.get('/logout', function(req, res){
 
 
 // Start server
-server.listen(8000, "127.0.0.1"); // production
-//server.listen(80); // dev
+//server.listen(8000, "127.0.0.1"); // production
+server.listen(80); // dev
 
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function Definitions

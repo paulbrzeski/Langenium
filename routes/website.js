@@ -120,7 +120,6 @@ var guide_index = function(req, res) {
 	var pages = [];
 	var processResult = function (result)
 	{
-		console.log(result);
 		if (result.length == 0) { console.log('Failed to get list of guide articles'); } 
 		else {
 			pages.push({name: 'Index', url: 'Index'});
@@ -138,8 +137,7 @@ var guide_index = function(req, res) {
 };
 
 exports.guide_save = function(req, res) {
-	console.log(req.body);
-	db.saveGuide(req.body.newtitle, req.body.title, req.body.content);
+	db.saveGuide(req.body.newtitle, req.body.newtitle, req.body.content);
 	res.writeHead(302, { 'Location': '/guide/'+req.body.newtitle  });
 	res.end();
 };
