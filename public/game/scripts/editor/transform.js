@@ -25,11 +25,11 @@ var transform = function() {
 // Events
 
 $("#transform").live("mouseover",function(e){
-	ui.editor.transform.mouseover = true;
+	editor.transform.mouseover = true;
 	controls.enabled = false;
 });
 $("#transform").live("mouseout",function(e){
-	ui.editor.transform.mouseover = false;
+	editor.transform.mouseover = false;
 	controls.enabled = true;
 });
 

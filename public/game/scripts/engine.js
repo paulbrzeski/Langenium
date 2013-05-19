@@ -2,7 +2,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	Engine
-	This contains the classes that manages the 3D renderer
+	This contains the classes that manages the 3D engine.renderer
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -18,7 +18,6 @@ var engine = function() {
     /* Game engine */
 	this.renderer,
 	this.camera,
-	this.controls;
 		
 	this.duration = 100,
 	this.keyframes = 5,
@@ -69,9 +68,9 @@ engine.prototype.createScene = function () {
 	sky.name = "sky";
 	scene.add(sky);
 	
-	water = [];
-	water.push(new effects.water.makeWater(M));
-	scene.add(water[0]);
+	water_tiles = [];
+	water_tiles.push(new effects.water.makeWater(M));
+	scene.add(water_tiles[0]);
 	
 	effects.water.update();
 	
@@ -83,17 +82,6 @@ engine.prototype.createScene = function () {
 	hemiLight.groundColor.setRGB( 0.6, 0.75, 1 );
 	hemiLight.position.set( 0, M, 0 );
 	scene.add( hemiLight );
-	if (window.location.href.indexOf("editor") > 0) {
-		controls.noRotate = true;
-		ui.makeDialog("editor_tools", ui.editor.makeControls());
-		$("#editor_tools .button").button();
-		$("#editor_tools .menu").menu();
-		
-		ui.makeDialog("properties", ui.editor.properties.makeControls());
-		ui.makeDialog("transform", ui.editor.transform.makeControls());
-		ui.editor.transform.render();
-		
-	}
 }	
 
 engine.prototype.animate = function () {
@@ -116,15 +104,15 @@ engine.prototype.animate = function () {
 		}
 	}
 	
-	if ((water.length  >= 1)&&(playerHeightOk == true)){
+	if ((water_tiles.length  >= 1)&&(playerHeightOk == true)){
 		var myTime = clock.getElapsedTime() * 10;
 		
-		for (var i = 0; i < water[0].geometry.vertices.length; i++) {
+		for (var i = 0; i < water_tiles[0].geometry.vertices.length; i++) {
 			var n = Math.sin( i / 5 + ( myTime + i ) /  7);
-			water[0].geometry.vertices[i].z += 5.654321 * n;
-			water[0].geometry.vertices[i].y = 222.654321 * n;
+			water_tiles[0].geometry.vertices[i].z += 5.654321 * n;
+			water_tiles[0].geometry.vertices[i].y = 222.654321 * n;
 		}
-		water[0].geometry.verticesNeedUpdate = true;
+		water_tiles[0].geometry.verticesNeedUpdate = true;
 	}
 	
 	if (player) {	
@@ -147,7 +135,7 @@ engine.prototype.animate = function () {
 		player.morphTargetInfluences[ engine.lastKeyframe ] = 1 - player.morphTargetInfluences[ keyframe ];
 		player.updateMatrix();
 
-		objects.players.movePlayer(player.velocity, player.position, objects.players.playerInput(delta));
+		controls.flight.move(player.velocity, player.position, controls.flight.input(delta));
 		if  (player.velocity != 0) {
 			player.velocity *= .996;
 		}
@@ -173,6 +161,6 @@ engine.prototype.animate = function () {
 
 	
 	requestAnimationFrame( engine.animate );
-	renderer.render( scene, camera );
-	controls.update();
+
+	engine.renderer.render( scene, client.camera );
 }

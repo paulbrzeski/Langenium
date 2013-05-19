@@ -25,11 +25,11 @@ var properties = function() {
 // Events
 
 $("#properties").live("mouseover",function(e){
-	ui.editor.transform.mouseover = true;
+	editor.transform.mouseover = true;
 	controls.enabled = false;
 });
 $("#properties").live("mouseout",function(e){
-	ui.editor.transform.mouseover = false;
+	editor.transform.mouseover = false;
 	controls.enabled = true;
 });
 
@@ -74,19 +74,19 @@ properties.prototype.getPropertyList = function(id) {
 };
 
 properties.prototype.onClick = function ( event ) {
-	if ((ui.editor.transform.mouseover == false)&&(ui.editor.transform.mouseover == false)) {
+	if ((editor.transform.mouseover == false)&&(editor.transform.mouseover == false)) {
 		var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
-		projector.unprojectVector( vector, camera );
-		var camera_pos = new THREE.Vector3().getPositionFromMatrix(camera.matrixWorld);
+		projector.unprojectVector( vector, client.camera );
+		var camera_pos = new THREE.Vector3().getPositionFromMatrix(client.camera.matrixWorld);
 		var raycaster = new THREE.Raycaster( camera_pos, vector.sub( camera_pos ).normalize() );
 
 		var intersects = raycaster.intersectObjects( scene.__objects );
 
 		if ( intersects.length > 0 ) {
-			ui.editor.properties.loadProperties(intersects[0].object.id);
-			$("#transform").html(ui.editor.transform.makeControls().data);
-			ui.editor.transform.render();
-			ui.editor.transform.loadProperties(intersects[0].object.id);
+			editor.properties.loadProperties(intersects[0].object.id);
+			$("#transform").html(editor.transform.makeControls().data);
+			editor.transform.render();
+			editor.transform.loadProperties(intersects[0].object.id);
 			// ui.editor.transform.refresh(); once scaling is implemented in transform.js, this can be uncommented
 		}
 	}

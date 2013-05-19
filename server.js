@@ -85,6 +85,8 @@ app.get('/community/*', website.community);
 //		Play Langenium
 app.get('/play', game.play);
 app.get('/play/*', game.play);
+//		Map editor
+app.get('/editor', game.editor);
 //		Security overrides
 app.get('/wiki/*', website.redirect);
 

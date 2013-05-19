@@ -1,5 +1,10 @@
 exports.play = function(req, res) {
 	res.setHeader("Expires", "-1");
 	res.setHeader("Cache-Control", "must-revalidate, private");
-	res.render('game/play', { });
+	res.render('game/play', { editor: false });
+};
+exports.editor = function(req, res) {
+	res.setHeader("Expires", "-1");
+	res.setHeader("Cache-Control", "must-revalidate, private");
+	res.render('game/play', { editor: true });
 };

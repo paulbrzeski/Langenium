@@ -13,6 +13,7 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 var objects = function() {
+	this.players = new players();
     this.cache = [];
     this.world_map = [];
     return this;
@@ -154,8 +155,8 @@ objects.prototype.renderObject = function (mesh, type, instruction) {
 		
 		player.velocity = 0;
 		
-		player.add(camera);
-		camera.lookAt(player);
+		player.add(client.camera);
+		
 		scene.add(player);
 		ships.push(player);
 
