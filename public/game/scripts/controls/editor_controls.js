@@ -1,8 +1,8 @@
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	Controls
-	This contains handlers for keyboard and mouse input
+	Editor controls
+	This contains input handlers for sky-bird view and any other special editor cameras in the future
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -13,44 +13,45 @@
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 // This object
-var controls = function() {
+var editor_controls = function() {
     
-	this.flight = new flight();
-	this.editor = new editor_controls();
-    
+   	this.camera = new THREE.PerspectiveCamera( 45, (client.winW / client.winH), 1, M * 2 );
+	this.camera.position.y = 5000;
+	this.camera.rotation.x = -.85;
+	this.enabled = false;
+
     return this;
 }
 
-$(document).bind('mousewheel DOMMouseScroll', function (e)
-{
-
-	controls.mousewheel(e);
-	
-});
 /*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	Function definitions
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-controls.prototype.mousewheel = function (e) {
-
-	e.preventDefault();
-	e.stopPropagation();
-
-	var delta = controls.extractWheelDelta(e);
-
-	var new_fov = client.camera.fov - delta / 11.321312;
-	
-	if (new_fov > 18 && new_fov < 120) {
-		client.camera.fov = new_fov;
+$(document).bind("mousedown", function(event) {
+	if (window.location.href.indexOf("editor") > 0) { 
+		editor.properties.onClick(event);
 	}
+});
 
-  	client.camera.updateProjectionMatrix();
+editor_controls.prototype.toggleCamera = function() {
+
+	if (controls.editor.enabled == true) {
+		player.remove(controls.editor.camera);
+		client.camera = controls.flight.camera;
+		player.add(controls.flight.camera);
+		controls.editor.enabled = false;
+		controls.flight.enabled = true;
+	}
+	else {
+		player.remove(controls.flight.camera);
+		client.camera = controls.editor.camera;
+		player.add(controls.editor.camera);
+		controls.editor.enabled = true;
+		controls.flight.enabled = false;
+
+	}
+	client.camera.updateProjectionMatrix();
 }
 
-controls.prototype.extractWheelDelta = function (e)
-{
-    if (e.wheelDelta)   return e.wheelDelta;
-    if (e.detail)       return e.detail * -40;
-    if (e.originalEvent && e.originalEvent.wheelDelta)
-                    return e.originalEvent.wheelDelta;
-}
+
+

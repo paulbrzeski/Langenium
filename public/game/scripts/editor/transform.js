@@ -26,11 +26,11 @@ var transform = function() {
 
 $("#transform").live("mouseover",function(e){
 	editor.transform.mouseover = true;
-	controls.enabled = false;
+//	controls.enabled = false;
 });
 $("#transform").live("mouseout",function(e){
 	editor.transform.mouseover = false;
-	controls.enabled = true;
+//	controls.enabled = true;
 });
 
 // Helpers

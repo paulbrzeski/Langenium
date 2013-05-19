@@ -22,6 +22,7 @@ html(lang="en")
 	script(src='/game/scripts/client.js')
 	script(src='/game/scripts/controls.js')
 	script(src='/game/scripts/controls/character.js')
+	script(src='/game/scripts/controls/editor_controls.js')
 	script(src='/game/scripts/controls/flight.js')
 	script(src='/game/scripts/effects.js')
 	script(src='/game/scripts/effects/bullets.js')
@@ -47,7 +48,7 @@ html(lang="en")
 
 		client = new client();
 		client.updateWinSizeVariables();
-		
+
 		engine = new engine();
 
 		controls = new controls();
@@ -74,9 +75,9 @@ html(lang="en")
 			
 		});
 	if (editor == true)
+		script(src='/game/scripts/editor.js')
 		script(src='/game/scripts/editor/properties.js')
 		script(src='/game/scripts/editor/transform.js')
-		script(src='/game/scripts/editor.js')
 		script(type='text/javascript')
 			var editor = new editor();
 			editor.properties = new properties();

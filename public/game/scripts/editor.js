@@ -23,12 +23,6 @@ var projector = new THREE.Projector();
 
 var editor = function() {
    
-	this.sky_camera_active = false;
-
-	this.camera = new THREE.PerspectiveCamera( 45, (client.winW / client.winH), 1, M * 2 );
-	this.camera.position.y = 5000;
-	this.camera.rotation.x = -.85;
-
 	return this;
 };
 
@@ -79,9 +73,8 @@ editor.prototype.makeControls = function () {
 
 		html.data += "<li><a href='#'>Camera</a>";
 		html.data += "<ul class='menu'>";
-			html.data += "<li><a href='#' onclick='editor.toggleCamera();'>Ship</a></li>";
-			html.data += "<li><a href='#' onclick='editor.toggleCamera();'>Bird's eye</a></li>";
-		html.data += "</ul>";
+			html.data += "<li><a href='#' onclick='controls.editor.toggleCamera();'>Toggle camera</a></li>";
+		html.data += "</ul></li>";
 		html.data += "</ul><br />";
 		
 		
@@ -97,26 +90,6 @@ editor.prototype.refresh = function() {
 	$("#editor_tools .button").button();
 	$("#editor_tools .menu").menu();
 };
-
-editor.prototype.toggleCamera = function() {
-
-	if (editor.sky_camera_active == true) {
-		player.remove(editor.camera);
-		client.camera = controls.flight.camera;
-		player.add(controls.flight.camera);
-		editor.sky_camera_active = false;
-	}
-	else {
-		player.remove(controls.flight.camera);
-		client.camera = editor.camera;
-		player.add(editor.camera);
-		editor.sky_camera_active = true;
-
-	}
-
-}
-
-
 
 
 

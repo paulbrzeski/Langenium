@@ -29,21 +29,16 @@ var flight = function() {
 
 $(document).bind("mousedown", function(event) {
 	if ((controls.flight)&&(controls.flight.enabled == true)) {
-		if (window.location.href.indexOf("editor") > 0) { 
-			editor.properties.onClick(event);
-		}
-		else {
-			switch (event.which) {
-				case 1:
-					client.isFiring = true;
-					break;
-				case 2:
-					//zoom IGNORE
-					break;
-				case 3:
-					//rotate
-					break;
-			}
+		switch (event.which) {
+			case 1:
+				client.isFiring = true;
+				break;
+			case 2:
+				//zoom IGNORE
+				break;
+			case 3:
+				//rotate
+				break;
 		}
 	}
 });
