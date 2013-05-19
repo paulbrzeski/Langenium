@@ -29,7 +29,6 @@ var editor = function() {
 	this.camera.position.y = 5000;
 	this.camera.rotation.x = -.85;
 
-
 	return this;
 };
 

@@ -30,15 +30,12 @@ client.prototype.initialize = function () {
 /*
 	Initializes the client... :P
 */
-	client.updateWinSizeVariables();
 	engine.renderer = new THREE.WebGLRenderer({
 		antialias : true
 	});
 
 	//default to flight camera
 	client.camera = controls.flight.camera;
-	client.camera.aspect = client.winW / client.winH;
-	client.camera.updateProjectionMatrix();
 	
 	engine.createScene();
 	

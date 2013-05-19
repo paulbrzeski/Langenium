@@ -46,6 +46,8 @@ html(lang="en")
 		var player, ships = [], bots = [], bullets = [], particle_systems = [], ui = [];
 
 		client = new client();
+		client.updateWinSizeVariables();
+		
 		engine = new engine();
 
 		controls = new controls();
@@ -67,8 +69,6 @@ html(lang="en")
 
 		$(document).ready(function(){
 
-			client.updateWinSizeVariables();
-			console.log(client.winW);
 			client.initialize();
 			engine.animate();
 			
