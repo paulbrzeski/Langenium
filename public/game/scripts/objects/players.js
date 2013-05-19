@@ -13,7 +13,7 @@ var players = function() {
 }
 
 players.prototype.playerInput = function (delta){
-	var keyboardInput = { d: delta, pZ: 0, pY: 0, rY: 0, fire: isFiring },
+	var keyboardInput = { d: delta, pZ: 0, pY: 0, rY: 0, fire: client.isFiring },
 			move = false;
 	
 	if (keyboard.pressed("W")){
@@ -51,7 +51,7 @@ players.prototype.playerInput = function (delta){
 		if (window.location.href.indexOf("editor") > 0) {
 		}
 	}
-	if (isFiring == true) {
+	if (client.isFiring == true) {
 		move = true;
 	}
 	
