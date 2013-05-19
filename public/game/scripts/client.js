@@ -51,8 +51,8 @@ client.prototype.onWindowResize = function () {
 	Resizes the engine.renderer
 */
 	client.updateWinSizeVariables();
-	camera.aspect = client.winW / client.winH;
-	camera.updateProjectionMatrix();
+	client.camera.aspect = client.winW / client.winH;
+	client.camera.updateProjectionMatrix();
  
 	engine.renderer.setSize( client.winW, client.winH );
 }
