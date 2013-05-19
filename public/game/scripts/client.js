@@ -37,6 +37,8 @@ client.prototype.initialize = function () {
 
 	//default to flight camera
 	client.camera = controls.flight.camera;
+	client.camera.aspect = client.winW / client.winH;
+	client.camera.updateProjectionMatrix();
 	
 	engine.createScene();
 	

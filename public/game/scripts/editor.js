@@ -24,9 +24,11 @@ var projector = new THREE.Projector();
 var editor = function() {
    
 	this.sky_camera_active = false;
-	this.camera = new THREE.PerspectiveCamera( 35, (client.winW) / (client.winH), 100, M * 2 );
+
+	this.camera = new THREE.PerspectiveCamera( 45, (client.winW / client.winH), 1, M * 2 );
 	this.camera.position.y = 5000;
 	this.camera.rotation.x = -.85;
+
 
 	return this;
 };
