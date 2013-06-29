@@ -154,23 +154,23 @@ flight.prototype.move = function (velocity, playerPosition, data) {
 	
 	// moves the water tiles position 
 	
-	for (var tile = 0; tile < water.length; tile++) {
+	for (var tile = 0; tile < water_tiles.length; tile++) {
 	
 		var rotateWater =  data.rY  * -1;
-		water[tile].material.map.offset.x-= Math.sin(rotateWater) * velocity / 100000;
-		water[tile].material.map.offset.y -= Math.cos(rotateWater) * velocity / 100000;
+		water_tiles[tile].material.map.offset.x-= Math.sin(rotateWater) * velocity / 100000;
+		water_tiles[tile].material.map.offset.y -= Math.cos(rotateWater) * velocity / 100000;
 		
 		if (tile == 0) {
-			water[0].position.x = player.position.x;
-			water[0].position.z = player.position.z;
+			water_tiles[0].position.x = data.pX;
+			water_tiles[0].position.z = data.pZ;
 		}
 		else {
-			water[tile].position.x = water[tile].position.ox + data.pX;
-			water[tile].position.z = water[tile].position.oz + data.pZ;
+			water_tiles[tile].position.x = water_tiles[tile].position.ox + data.pX;
+			water_tiles[tile].position.z = water_tiles[tile].position.oz + data.pZ;
 		}
 	}	
 	
-	var height_diff = 5000 + 2000 * (water.length-1);
+	var height_diff = 5000 + 2000 * (water_tiles.length-1);
 	
 	sky.position.x = data.pX;
 	
